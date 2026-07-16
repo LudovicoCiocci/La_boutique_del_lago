@@ -1,0 +1,16 @@
+---
+import bgLago from "../assets/lago_hero.jpg";
+import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw"
+---
+
+<section id="hero" class="relative w-full h-1/2 overflow-hidden">
+  <div
+    id="hero_bg"
+    style={`--bg-image: url(${bgLago.src})`}
+    class="absolute inset-0"
+  ></div>
+
+  <div class="relative flex items-center justify-center w-full h-full">
+    <div class="text-terracotta w-200 h-auto" set:html={logoSvg} />
+  </div>
+</section>

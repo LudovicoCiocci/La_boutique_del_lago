@@ -1,0 +1,41 @@
+---
+import {LightGallery} from "astro-lightgallery";
+---
+
+<section id="about">
+  <div class="flex flex-row">
+   
+    <div class="mx-auto max-w-2xl text-2xl items-center justify-center">
+      <h2 class="text-terracotta text-4xl text-center ">Souvernire Shop</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      Nam dignissim consequat lacinia. In iaculis, turpis sed lacinia lobortis,
+      eros urna porttitor nunc, ut auctor elit velit non justo.
+      Mauris maximus tempor tempor. Aenean aliquet turpis eget erat suscipit, vel luctus turpis finibus.
+      Nunc non odio commodo, eleifend leo sed, malesuada metus.
+      Nulla vel nisl id turpis iaculis fermentum.
+      Proin egestas odio nibh, vitae consequat odio facilisis in.</p>
+    </div>
+  </div>
+</section>
+<section>
+ <div class="flex mx-auto w-full max-w-2xl">
+      <LightGallery
+        layout={{
+          imgs: [
+            {src:"/demo_image_1.jpeg"},
+            {src:"/demo_image_1.jpeg"},
+            {src:"/demo_image_1.jpeg"},
+
+          ]
+        }}
+
+
+      />
+
+    </div>
+</section>
+
+
+<script>
+
+</script>

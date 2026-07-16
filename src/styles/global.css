@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+
+@theme {
+  --color-beije:#EDE8D0;
+  --color-terracotta:#9E3A26;
+
+    --font-heading:;
+    --font-body:;
+}
+body {
+  background-color:var(--color-beije);
+}
+#hero{
+
+
+}
+
+  #hero_bg {
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px);
+    opacity: 0.6;
+  }
+
+
