@@ -1,27 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap');
 @import "tailwindcss";
+
 
 
 @theme {
   --color-beije:#EDE8D0;
   --color-terracotta:#9E3A26;
+  --color-lake:#5A8C82;
 
-    --font-heading:;
-    --font-body:;
-}
+  --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
 body {
   background-color:var(--color-beije);
 }
-#hero{
-
-
+  
+.hero-background {
+  postion:absolute;
+  z-index:-1;
+  height:100%;
+  width:100%;
+  object-fit:cover;
+  opacity:0.5;
 }
-
-  #hero_bg {
-    background-image: var(--bg-image);
-    background-size: cover;
-    background-position: center;
-    filter: blur(10px);
-    opacity: 0.6;
-  }
-
-
