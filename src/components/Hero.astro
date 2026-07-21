@@ -4,14 +4,13 @@ import bgLago from "../assets/lago_hero.jpg";
 import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw";
 ---
 
-<section id="hero" class="relative w-full h-1/2 overflow-hidden">
-  <div
-    id="hero_bg" class="absolute inset-0"
-  >
-    <Image 
+<section id="hero" class="relative w-full h-svh overflow-hidden">
+  <div id="hero_bg" class="absolute inset-0 z-[-1] opacity-50">
+    <Image
       src={bgLago}
-      class="hero-background",
-      alt="The image of the lake" />
+      alt="The image of the lake"
+      class="w-full h-full object-cover"
+    />
   </div>
 
   <div class="relative flex items-center justify-center w-full h-full">

@@ -1,0 +1,100 @@
+---
+// src/components/ui/ImageCarousel.astro
+const { images = [], aspectRatio = '16 / 9' } = Astro.props;
+
+// Helper to resolve string path from local image import object or URL string
+function resolveImgSrc(src) {
+  if (typeof src === 'object' && src !== null && src.src) {
+    return src.src;
+  }
+  return src;
+}
+---
+
+<div class="embla">
+  <div class="embla__viewport">
+    <div class="embla__container">
+      {images.map((image) => (
+        <div class="embla__slide">
+          <div class="embla__slide__inner" style={`aspect-ratio: ${aspectRatio};`}>
+            <img 
+              src={resolveImgSrc(image.src)} 
+              alt={image.alt || ''} 
+              class="embla__slide__img" 
+              loading="lazy"
+            />
+            {image.caption && (
+              <p class="embla__slide__caption">{image.caption}</p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="embla__controls">
+    <button class="embla__button embla__prev" type="button" aria-label="Previous slide">
+      ‹
+    </button>
+    <div class="embla__dots"></div>
+    <button class="embla__button embla__next" type="button" aria-label="Next slide">
+      ›
+    </button>
+  </div>
+</div>
+
+<script>
+  import EmblaCarousel from 'embla-carousel';
+
+  function initEmbla() {
+    const carousels = document.querySelectorAll('.embla');
+
+    carousels.forEach((carouselNode) => {
+      const viewportNode = carouselNode.querySelector('.embla__viewport');
+      const prevBtnNode = carouselNode.querySelector('.embla__prev');
+      const nextBtnNode = carouselNode.querySelector('.embla__next');
+      const dotsNode = carouselNode.querySelector('.embla__dots');
+
+      if (!viewportNode) return;
+
+      const emblaApi = EmblaCarousel(viewportNode, { loop: true });
+
+      if (prevBtnNode) prevBtnNode.addEventListener('click', () => emblaApi.scrollPrev());
+      if (nextBtnNode) nextBtnNode.addEventListener('click', () => emblaApi.scrollNext());
+
+      if (dotsNode) {
+        const slideCount = emblaApi.scrollSnapList().length;
+        dotsNode.innerHTML = '';
+
+        const dotNodes = [];
+        for (let i = 0; i < slideCount; i++) {
+          const dot = document.createElement('button');
+          dot.className = 'embla__dot';
+          dot.type = 'button';
+          dot.ariaLabel = `Go to slide ${i + 1}`;
+          dot.addEventListener('click', () => emblaApi.scrollTo(i));
+          dotsNode.appendChild(dot);
+          dotNodes.push(dot);
+        }
+
+        const updateDots = () => {
+          const selectedIndex = emblaApi.selectedScrollSnap();
+          dotNodes.forEach((dot, index) => {
+            if (index === selectedIndex) {
+              dot.classList.add('embla__dot--selected');
+            } else {
+              dot.classList.remove('embla__dot--selected');
+            }
+          });
+        };
+
+        emblaApi.on('select', updateDots);
+        emblaApi.on('init', updateDots);
+        updateDots();
+      }
+    });
+  }
+
+  initEmbla();
+  document.addEventListener('astro:page-load', initEmbla);
+</script>

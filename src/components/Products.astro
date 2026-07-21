@@ -1,0 +1,54 @@
+
+---
+import ImageCarousel from '../components/ui/ImageCarousel.astro';
+
+// Local image imports from src/assets/
+import pizzoccheri from '../assets/pasta/pizzoccheri_1.jpeg';
+import pasta_2 from '../assets/pasta/pasta_2.jpeg';
+import pasta_3 from '../assets/pasta/pasta_3.jpeg';
+
+const galleryImages = [
+  {
+    src: pizzoccheri,
+    alt: 'foto dei pizzoccheri',
+    caption: 'foto dei pizzoccheri artigianali'
+  },
+  {
+    src: pasta_2,
+    alt: 'Pasta artigianale fresca',
+    caption: 'Pasta fatta in casa'
+  },
+  {
+    src: pasta_3,
+    alt: 'Specialità della casa',
+    caption: 'Piatti tradizionali'
+  }
+];
+---
+
+<section id="pasta" class="py-10">
+  <div class="title text-center mb-8 px-4"> 
+    <h2 class="text-3xl font-bold">I nostri prodotti</h2>
+  </div> 
+
+  <div class="flex flex-col md:flex-row md:max-w-7xl
+    md:mx-auto md:px-4 gap-8 lg:gap-12 
+    items-center justify-center
+    px-4">
+
+    <div class="w-full md:w-1/2 min-w-0">
+      <ImageCarousel images={galleryImages} />
+    </div>
+
+    <!-- Text column -->
+    <div class="w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15">
+      <h2 class="text-2xl font-bold mb-4">La Nostra Pasta Artigianale</h2>
+      <p class="leading-7 text-2xl font-body text-teal-700 text-shadow-lg">
+        Ogni grande avventura inizia da un'idea. La nostra è nata sulle rive del lago.
+        Siamo Roberto e Francesco, due ragazzi con un sogno: creare uno spazio capace di raccontare il territorio in modo nuovo, attraverso oggetti, sapori e dettagli che parlano davvero del Lago di Lecco.
+        Nasce così La Boutique del Lago: un concept store dove souvenir, eccellenze enogastronomiche e collezioni originali si incontrano per offrire un'esperienza autentica, moderna e tutta da vivere. Questo è solo l'inizio di un viaggio che non vediamo l'ora di condividere con voi.
+        Benvenuti a bordo.
+      </p>
+    </div>
+  </div>
+</section>
