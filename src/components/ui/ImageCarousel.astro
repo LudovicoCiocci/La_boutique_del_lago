@@ -1,8 +1,6 @@
 ---
-// src/components/ui/ImageCarousel.astro
 const { images = [], aspectRatio = '16 / 9' } = Astro.props;
 
-// Helper to resolve string path from local image import object or URL string
 function resolveImgSrc(src) {
   if (typeof src === 'object' && src !== null && src.src) {
     return src.src;
@@ -13,14 +11,14 @@ function resolveImgSrc(src) {
 
 <div class="embla">
   <div class="embla__viewport">
-    <div class="embla__container">
+    <div class="embla__container group overflow-hidden">
       {images.map((image) => (
         <div class="embla__slide">
           <div class="embla__slide__inner" style={`aspect-ratio: ${aspectRatio};`}>
             <img 
               src={resolveImgSrc(image.src)} 
               alt={image.alt || ''} 
-              class="embla__slide__img" 
+              class="embla__slide__img transition-transform duration-500 group-hover:scale-105" 
               loading="lazy"
             />
             {image.caption && (
