@@ -1,0 +1,173 @@
+---
+
+---
+
+<div 
+  id="cookie-banner"
+  class="
+  fixed bottom-4 left-4 right-4 z-50
+  sm:left-auto sm:w-full sm:max-w-sm
+  bg-lake border border-terracotta/60 rounded-lg
+  px-6 py-6
+  flex flex-col gap-4
+  transition-transform duration-500 ease-out
+  "
+>
+  <!-- Main Message -->
+  <div class="flex flex-col gap-2">
+    <p class="font-heading text-beije text-lg">Questo sito usa i cookie</p>
+    <p class="font-body text-beije/90 text-sm leading-relaxed">
+      Utilizziamo Google Analytics per analizzare il traffico del sito in forma anonima. Nessun dato viene venduto, e il tracciamento parte solo con il tuo consenso.
+      <a href="/privacy" class="text-terracotta hover:text-beije underline transition-colors duration-200">
+        Leggi la privacy policy
+      </a>
+    </p>
+  </div>
+
+  <div id="cookie-preferences-panel" class="hidden flex flex-col gap-3 pt-4 border-t border-beije/20 text-xs text-beije">
+    <p class="font-semibold text-beije mb-1">Gestisci le preferenze</p>
+
+    <div class="flex items-center justify-between bg-lake/50 p-2 rounded border border-beije/10">
+      <div>
+        <p class="font-bold text-beije">Cookie necessari</p>
+        <p class="text-[11px] text-beije/70">Indispensabili per il funzionamento del sito e per ricordare le tue preferenze.</p>
+      </div>
+      <span class="text-beije/60 font-mono text-[10px] uppercase tracking-wider">Sempre attivi</span>
+    </div>
+
+    <div class="flex items-center justify-between bg-lake/50 p-2 rounded border border-beije/10">
+      <div>
+        <p class="font-bold text-beije">Cookie analitici</p>
+        <p class="text-[11px] text-beije/70">Ci aiutano a capire come i visitatori interagiscono con il sito.</p>
+      </div>
+      <input 
+        type="checkbox" 
+        id="cookie-pref-analytics" 
+        class="accent-terracotta w-4 h-4 cursor-pointer"
+      />
+    </div>
+
+    <button
+      id="cookie-save-prefs"
+      class="w-full mt-2 py-2 rounded-lg font-body text-xs bg-terracotta/10 text-beije border border-terracotta/30 hover:bg-terracotta/20 transition-all duration-200"
+    >
+      Salva selezione
+    </button>
+  </div>
+
+  <div class="flex flex-row gap-2">
+    <button
+      id="cookie-decline"
+      class="flex-1 px-3 py-2 rounded-lg font-body text-xs border border-beije/30 text-beije hover:border-beije/60 transition-all duration-200"
+    >
+      Rifiuta
+    </button>
+    <button
+      id="cookie-customize"
+      class="flex-1 px-3 py-2 rounded-lg font-body text-xs border border-beije/30 text-beije hover:border-beije/60 transition-all duration-200"
+    >
+      Personalizza
+    </button>
+    <button
+      id="cookie-accept"
+      class="flex-1 px-3 py-2 rounded-lg font-body text-xs bg-terracotta text-beije hover:bg-terracotta/80 transition-colors duration-200"
+    >
+      Accetta tutti
+    </button>
+  </div>
+</div>
+
+<script>
+declare global {
+  interface Window {
+    dataLayer: any[];
+    reopenCookieBanner: () => void;
+  }
+}
+
+window.dataLayer = window.dataLayer || [];
+function gtag(..._args: any[]) {
+  window.dataLayer.push(arguments as unknown as any);
+}
+
+const banner = document.getElementById('cookie-banner');
+const acceptBtn = document.getElementById('cookie-accept');
+const declineBtn = document.getElementById('cookie-decline');
+const customizeBtn = document.getElementById('cookie-customize');
+const savePrefsBtn = document.getElementById('cookie-save-prefs');
+const prefsPanel = document.getElementById('cookie-preferences-panel');
+
+const analyticsCheckbox = document.getElementById('cookie-pref-analytics') as HTMLInputElement | null;
+
+const existingConsent = localStorage.getItem('cookie-consent');
+
+gtag('consent', 'default', {
+  'analytics_storage': existingConsent === 'accepted' ? 'granted' : 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied'
+});
+
+function showBanner() {
+  setTimeout(() => { banner?.classList.add('is-visible'); }, 100);
+}
+
+function hideBanner() {
+  banner?.classList.remove('is-visible');
+}
+
+function loadAnalytics() {
+  if (!document.getElementById('google-analytics-tag')) {
+    const script = document.createElement('script');
+    script.id = 'google-analytics-tag';
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+    document.head.appendChild(script);
+
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { 'anonymize_ip': true }); 
+  }
+  gtag('consent', 'update', { 'analytics_storage': 'granted' });
+}
+
+function setConsent(value: 'accepted' | 'declined') {
+  localStorage.setItem('cookie-consent', value);
+  hideBanner();
+  if (value === 'accepted') {
+    loadAnalytics();
+  } else {
+    gtag('consent', 'update', { 'analytics_storage': 'denied' });
+  }
+}
+
+if (!existingConsent) {
+  showBanner();
+} else if (existingConsent === 'accepted') {
+  loadAnalytics();
+}
+
+acceptBtn?.addEventListener('click', () => setConsent('accepted'));
+declineBtn?.addEventListener('click', () => setConsent('declined'));
+
+customizeBtn?.addEventListener('click', () => {
+  prefsPanel?.classList.toggle('hidden');
+  if (analyticsCheckbox) {
+    const currentConsent = localStorage.getItem('cookie-consent');
+    analyticsCheckbox.checked = currentConsent === 'accepted';
+  }
+});
+
+savePrefsBtn?.addEventListener('click', () => {
+  if (analyticsCheckbox?.checked) {
+    setConsent('accepted');
+  } else {
+    setConsent('declined');
+  }
+});
+
+window.reopenCookieBanner = () => {
+  localStorage.removeItem('cookie-consent');
+  prefsPanel?.classList.add('hidden'); 
+  showBanner();
+};
+</script>

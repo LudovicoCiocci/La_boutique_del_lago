@@ -1,36 +1,34 @@
 ---
 import {Image} from "astro:assets";
-import frontStore from "../assets/boutique_entrance_demo.jpg";
+import ourProducts from "../assets/i_nostri_prodotti.jpeg";
 ---
 
-<section id="about" class="border-b border-teal-600/40">
+<section id="products" class="border-b border-teal-600/40">
   <div class="flex flex-row">
-    
+
 
     <div class="mx-auto max-w-6xl items-stretch justify-center flex sm:flex-row flex-col gap-8 sm:gap-12 pt-10 pb-15">
-            <div id="about_text" class="sm:order-2  sm:w-3/5 w-full text-2xl px-6">
-<h2 class="text-terracotta text-4xl font-heading mt-10 sm:mt-0">Souvenire Shop</h2>
+      <div id="products_text" class="reveal-from-right sm:order-2 sm:w-3/5 w-full text-2xl px-6 ">
+        <h2 class="text-terracotta text-4xl font-heading mt-10 sm:mt-0">Un tuffo nel passato</h2>
         <span class="block my-4"></span>
         <p class="font-body justify-center text-teal-800 text-shadow-lg">
-          Ogni grande avventura inizia da un'idea.<br> La nostra è nata sulle rive del lago.
+          Ogni angolo della boutique è un piccolo viaggio nel territorio.
           <span class="block my-2"></span>
-          Siamo Roberto e Francesco, due ragazzi con un sogno: creare uno spazio capace di raccontare il territorio in modo nuovo,
-          attraverso oggetti, sapori e dettagli che parlano davvero del Lago di Lecco.
+          Utensili in legno lavorati a mano, oggetti che raccontano i mestieri di un tempo,
+          e una selezione di <span class="font-bold text-terracotta italic">liquori e distillati locali </span>
+          che portano con sé il carattere delle nostre montagne.
           <span class="block my-2"></span>
-          Nasce così <span class="font-bold text-terracotta"> La Boutique del Lago </span>: un concept store dove
-          <span class="font-bold text-terracotta italic"> souvenir</span>, 
-          <span class="font-bold text-terracotta italic">eccellenze enogastronomiche </span>
-          e <span class="font-bold text-terracotta italic">collezioni originali</span> si incontrano per offrire un'esperienza autentica, moderna e tutta da vivere.
-          Questo è solo l'inizio di un viaggio che non vediamo l'ora di condividere con voi.
-          <span class="block my-2"></span>
-          <span class="font-bold text-terracotta italic underline"> Benvenuti a bordo! </span>
+          Ogni pezzo è scelto da <span class="font-bold text-terracotta">Roberto e Francesco </span> 
+          con la stessa cura con cui lo troverete esposto qui: 
+          <span class="font-bold text-terracotta italic">non semplici souvenir, ma frammenti autentici del Lago di Lecco </span> 
+          da portare a casa con voi.
         </p>
       </div>
-      <div id="about_img" class="sm:order-1  sm:w-2/5 w-full overflow-hidden px-4">
+      <div id="products_img" class="sm:order-1  sm:w-2/5 w-full overflow-hidden px-4 group">
         <Image 
-          src={frontStore} 
-          alt="the front store image"
-          class="w-full h-full object-cover rounded-2xl"
+          src={ourProducts} 
+          alt="scaffale Utensili locali e liquori"
+          class="w-full h-full object-cover rounded-2xl group-hover:scale-105 duration-500"
         />
       </div>
     </div>

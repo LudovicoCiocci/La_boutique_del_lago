@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 
-@custom-variant dark (&:is(.dark *));
+
 
 @theme {
   --color-beije:#EDE8D0;
@@ -12,14 +12,14 @@
   --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   margin:0;
   padding:0;
   width:100%;
-  overflow-x:hidden;
+  overflow-x:clip;
   background-color:var(--color-beije);
 }
 
@@ -126,4 +126,52 @@ body {
 
 .embla__dot--selected {
   background:var(--color-terracotta);
+}
+/* Cookie-Banner */
+#cookie-banner {
+  transform: translateY(200%);
+}
+
+#cookie-banner.is-visible {
+  transform: translateY(0);
+}
+/* animations */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    /* Reduced distance from 300px for a more natural feel */
+    transform: translateX(100px); 
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reveal-from-left {
+  /* Swapped 'linear' for 'ease-out' */
+  animation: slide-in-left ease-out both;
+  animation-timeline: view();
+  /* Widened the range so the animation has time to breathe */
+  animation-range: entry 10% cover 40%; 
+  /* Tells the browser to optimize these properties */
+  will-change: transform, opacity; 
+}
+
+.reveal-from-right {
+  animation: slide-in-right ease-out both;
+  animation-timeline: view();
+  animation-range: entry 10% cover 40%;
+  will-change: transform, opacity;
 }

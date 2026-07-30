@@ -6,6 +6,8 @@ import ImageCarousel from '../components/ui/ImageCarousel.astro';
 import pizzoccheri from '../assets/pasta/pizzoccheri_1.jpeg';
 import pasta_2 from '../assets/pasta/pasta_2.jpeg';
 import pasta_3 from '../assets/pasta/pasta_3.jpeg';
+import pasta_4 from '../assets/pasta/pasta_4.jpeg';
+import pasta_5 from '../assets/pasta/pasta_5.jpeg';
 
 const galleryImages = [
   {
@@ -22,13 +24,23 @@ const galleryImages = [
     src: pasta_3,
     alt: 'Specialità della casa',
     caption: 'Piatti tradizionali'
+  },
+  {
+    src:pasta_4,
+    alt:'Pasta artigianale',
+    caption: 'Pasta artigianale',
+  },
+  {
+    src:pasta_5,
+    alt:'Pasta artigianale',
+    caption:'Pasta artigianale',
   }
 ];
 ---
 
-<section id="pasta" class="py-10">
+<section id="pasta" class="py-10 border-b border-teal-600/40">
   <div class="title text-center mb-8 px-4"> 
-    <h2 class="text-3xl font-bold">I nostri prodotti</h2>
+    <h2 class="text-3xl  font-heading text-terracotta">La Nostra Pasta Artigianale</h2>
   </div> 
 
   <div class="flex flex-col md:flex-row md:max-w-7xl
@@ -36,18 +48,23 @@ const galleryImages = [
     items-center justify-center
     px-4">
 
-    <div class="w-full md:w-1/2 min-w-0">
+    <div class="w-full md:w-1/2 min-w-0 sm:order-2">
       <ImageCarousel images={galleryImages} />
     </div>
 
     <!-- Text column -->
-    <div class="w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15">
-      <h2 class="text-2xl font-bold mb-4">La Nostra Pasta Artigianale</h2>
-      <p class="leading-7 text-2xl font-body text-teal-700 text-shadow-lg">
-        Ogni grande avventura inizia da un'idea. La nostra è nata sulle rive del lago.
-        Siamo Roberto e Francesco, due ragazzi con un sogno: creare uno spazio capace di raccontare il territorio in modo nuovo, attraverso oggetti, sapori e dettagli che parlano davvero del Lago di Lecco.
-        Nasce così La Boutique del Lago: un concept store dove souvenir, eccellenze enogastronomiche e collezioni originali si incontrano per offrire un'esperienza autentica, moderna e tutta da vivere. Questo è solo l'inizio di un viaggio che non vediamo l'ora di condividere con voi.
-        Benvenuti a bordo.
+    <div class="reveal-from-left w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15 sm:order-1">
+      <h3 class="text-2xl font-heading italic text-terracotta mb-4">Grano, acqua e la pazienza di un tempo</h3>
+      <p class="leading-7 text-2xl font-body text-teal-800 text-shadow-lg">
+        Nella nostra boutique trovate una selezione di pasta fresca lavorata secondo le ricette 
+        che appartengono a questa terra, tra il lago e le montagne che lo custodiscono.
+        <br><br>
+        Non potevano mancare i <span class="font-bold italic text-terracotta">pizzoccheri</span>, 
+        simbolo delle valli che si affacciano sul Lario: grano saraceno, pazienza e tradizione 
+        racchiusi in ogni formato.
+        <br><br>
+        Accanto, altre paste artigianali pensate per portare in tavola,anche lontano da qui,
+        il sapore autentico del territorio.
       </p>
     </div>
   </div>

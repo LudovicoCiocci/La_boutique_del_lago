@@ -1,0 +1,63 @@
+---
+import ImageCarousel from '../components/ui/ImageCarousel.astro';
+import olio_locale from '../assets/olio/olio_locale.jpeg';
+import olio_normale from '../assets/olio/olio_normale.jpeg';
+import olio_limone from '../assets/olio/olio_limone.jpeg';
+import olio_tartufo from '../assets/olio/olio_tartufo.jpeg';
+import olio_piccante from '../assets/olio/olio_piccante.jpeg';
+
+const galleryImages = [
+  {
+    src: olio_locale,
+    alt: 'olio extravergine locale',
+    caption: 'Il nostro olio del territorio'
+  },
+  {
+    src: olio_normale,
+    alt: 'olio extravergine artigianale',
+    caption: 'Olio extravergine artigianale'
+  },
+  {
+    src: olio_limone,
+    alt: 'olio aromatizzato al limone',
+    caption: 'Olio al limone'
+  },
+  {
+    src: olio_tartufo,
+    alt: 'olio aromatizzato al tartufo',
+    caption: 'Olio al tartufo'
+  },
+  {
+    src: olio_piccante,
+    alt: 'olio piccante artigianale',
+    caption: 'Olio piccante'
+  }
+];
+---
+<section id="olio" class="py-10 border-b border-teal-600/40">
+  <div class="title text-center mb-8 px-4"> 
+    <h2 class="text-3xl font-heading text-terracotta">Il Nostro Olio artigianale</h2>
+  </div> 
+  <div class="flex flex-col md:flex-row md:max-w-7xl
+    md:mx-auto md:px-4 gap-8 lg:gap-12 
+    items-center justify-center
+    px-4">
+    <div class="sm:order-2 w-full md:w-1/2 min-w-0">
+      <ImageCarousel images={galleryImages} />
+    </div>
+    <!-- Text column -->
+    <div class="sm:order-1 reveal-from-left w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15">
+
+      <h3 class="text-2xl italic font-heading text-terracotta mb-4">Il gusto della terra,in una goccia</h3>
+      <p class="leading-7 text-2xl font-body text-teal-700 text-shadow-lg">
+        Olive raccolte a mano e spremute a freddo per custodirne intatto il profumo e il carattere.
+        <br><br>
+        Accanto al nostro extravergine del territorio, una selezione di 
+        <span class="font-bold italic text-terracotta"> olii aromatizzati</span> al limone, al tartufo, al peperoncino, 
+        pensati per portare in tavola un tocco in più di autenticità.
+        <br><br>
+        Ogni bottiglia racchiude il lavoro lento di chi non si arrende alla fretta della produzione su larga scala.
+      </p>
+    </div>
+  </div>
+</section>

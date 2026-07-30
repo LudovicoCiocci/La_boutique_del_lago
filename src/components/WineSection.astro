@@ -2,51 +2,54 @@
 import ImageCarousel from '../components/ui/ImageCarousel.astro';
 
 
-import pizzoccheri from '../assets/pasta/pizzoccheri_1.jpeg';
-import pasta_2 from '../assets/pasta/pasta_2.jpeg';
-import pasta_3 from '../assets/pasta/pasta_3.jpeg';
+import vino_generale from '../assets/vino/vini_generale.jpeg';
+import vino_dx from '../assets/vino/vini_dx.jpeg';
+import vino_sx from '../assets/vino/vini_sx.jpeg';
 
 const galleryImages = [
   {
-    src: pizzoccheri,
-    alt: 'foto dei pizzoccheri',
-    caption: 'foto dei pizzoccheri artigianali'
+    src: vino_generale,
+    alt: 'scaffale dei vini',
+    caption: 'I nostri vini'
   },
   {
-    src: pasta_2,
-    alt: 'Pasta artigianale fresca',
-    caption: 'Pasta fatta in casa'
+    src: vino_dx,
+    alt: 'scaffale dei vini',
+    caption: 'I nostri vini'
   },
   {
-    src: pasta_3,
+    src: vino_sx,
     alt: 'Specialità della casa',
-    caption: 'Piatti tradizionali'
+    caption: 'I nostri vini'
   }
 ];
 ---
 
-<section id="pasta" class="py-10">
+<section id="vini" class="py-10 border-b border-teal-600/40">
   <div class="title text-center mb-8 px-4"> 
-    <h2 class="text-3xl font-bold">I nostri prodotti</h2>
+    <h2 class="text-3xl  text-terracotta font-heading">I nostri Vini</h2>
   </div> 
 
-  <div class="flex flex-col md:flex-row md:max-w-7xl
+  <div class=" flex flex-col md:flex-row md:max-w-7xl
     md:mx-auto md:px-4 gap-8 lg:gap-12 
     items-center justify-center
     px-4">
 
-    <div class="w-full md:w-1/2 min-w-0">
+    <div class="sm:order-1 w-full md:w-1/2 min-w-0">
       <ImageCarousel images={galleryImages} />
     </div>
 
     <!-- Text column -->
-    <div class="w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15">
-      <h2 class="text-2xl font-bold mb-4">La Nostra Pasta Artigianale</h2>
-      <p class="leading-7 text-2xl font-body text-teal-700 text-shadow-lg">
-        Ogni grande avventura inizia da un'idea. La nostra è nata sulle rive del lago.
-        Siamo Roberto e Francesco, due ragazzi con un sogno: creare uno spazio capace di raccontare il territorio in modo nuovo, attraverso oggetti, sapori e dettagli che parlano davvero del Lago di Lecco.
-        Nasce così La Boutique del Lago: un concept store dove souvenir, eccellenze enogastronomiche e collezioni originali si incontrano per offrire un'esperienza autentica, moderna e tutta da vivere. Questo è solo l'inizio di un viaggio che non vediamo l'ora di condividere con voi.
-        Benvenuti a bordo.
+    <div class="reveal-from-right sm:order-2 w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15">
+      <h3 class="text-2xl italic font-heading mb-4 text-terracotta">Vigne che si specchiano nel lago</h3>
+      <p class="leading-7 text-2xl font-body text-teal-800 text-shadow-lg">
+        Una selezione di vini che nascono dalle vigne del territorio lariano, 
+        strette tra le montagne e il lago che le protegge.
+        <br><br>
+        Etichette scelte per raccontare il carattere di una terra difficile e generosa, 
+        lavorata da chi conosce ogni filare come un capitolo di una storia più grande.
+        <br><br>
+        Un calice che è già un piccolo viaggio tra le colline che si specchiano nel Lario.
       </p>
     </div>
   </div>
