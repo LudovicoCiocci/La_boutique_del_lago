@@ -1,11 +1,11 @@
 ---
 import {Image} from "astro:assets";
-import bgLago from "../assets/lago_hero.jpg";
+import bgLago from "../assets/foto_lago_hero.jpeg";
 import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw";
 ---
 
-<section id="hero" class="relative w-full h-svh overflow-hidden bg-teal-800/40">
-  <div id="hero_bg" class="absolute inset-0 z-[-1] opacity-50">
+<section id="hero" class="relative w-full h-svh overflow-hidden bg-teal-800/20">
+  <div id="hero_bg" class="absolute inset-0 z-[-1]">
     <Image
       src={bgLago}
       alt="The image of the lake"
@@ -14,6 +14,6 @@ import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw";
   </div>
 
   <div class="relative flex items-center justify-center w-full h-full">
-    <div class="text-terracotta w-200 h-auto" set:html={logoSvg} />
+    <div class="text-white w-200 h-auto" set:html={logoSvg} />
   </div>
 </section>

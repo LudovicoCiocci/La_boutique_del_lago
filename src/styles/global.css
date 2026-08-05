@@ -11,6 +11,7 @@
 
   --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
+
 html {
   overflow-x: clip;
 }
