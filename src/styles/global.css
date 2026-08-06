@@ -10,12 +10,18 @@
   --color-lake:#5A8C82;
   --color-heading:var(--color-sky-500);
   --color-text-color:var(--color-olive-600);
+  --color-ink:#1A1A2E;
 
   --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
 
 html {
   overflow-x: clip;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -85,9 +91,10 @@ body {
   background-color: #1e293b;
 }
 
-@media (width < 640px) {
+
+@media (width < 840px ){
   .embla__slide__inner {
-    aspect-ratio: 3 / 4 !important;
+    aspect-ratio: 3/4 !important;
   }
 }
 
@@ -193,7 +200,7 @@ body {
   animation: slide-in-left ease-out both;
   animation-timeline: view();
   /* Widened the range so the animation has time to breathe */
-  animation-range: entry 10% cover 40%; 
+  animation-range: entry 10% cover 30%; 
   /* Tells the browser to optimize these properties */
   will-change: transform, opacity; 
 }
@@ -201,6 +208,6 @@ body {
 .reveal-from-right {
   animation: slide-in-right ease-out both;
   animation-timeline: view();
-  animation-range: entry 10% cover 40%;
+  animation-range: entry 10% cover 30%;
   will-change: transform, opacity;
 }

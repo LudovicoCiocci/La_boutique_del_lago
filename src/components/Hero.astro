@@ -2,9 +2,11 @@
 import {Image} from "astro:assets";
 import bgLago from "../assets/foto_lago_hero.jpeg";
 import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw";
+import logo from "../assets/logo/logo.svg?raw";
+import logoText from "../assets/logo/testo_logo.svg?raw";
 ---
 
-<section id="hero" class="relative w-full h-svh overflow-hidden bg-heading/30">
+<section id="hero" class="relative w-full h-svh overflow-hidden bg-heading/30 sm:bg-heading/30">
   <div id="hero_bg" class="absolute inset-0 z-[-1]">
     <Image
       src={bgLago}
@@ -12,8 +14,14 @@ import logoSvg from "../assets/logo/La Boutique Del Lago.svg?raw";
       class="w-full h-full object-cover"
     />
   </div>
-
-  <div class="relative flex items-center justify-center w-full h-full">
-    <div class="text-white w-200 h-auto" set:html={logoSvg} />
+  <div class="relative flex flex-col lg:flex-row items-center justify-start w-full h-full px-6 sm:pl-10 sm:px-4 gap-4 sm:gap-4">
+    <div class="text-white w-100 sm:w-150 lg:w-200 h-auto p-6" set:html={logoSvg} />
+    <!-- <div class="text-white h-auto" set:html={logoText}/> -->
+    <div class="backdrop-blur-sm p-5 sm:p-10 rounded-lg max-w-xs sm:max-w-md mx-auto mb-2">
+      <h1 class="text-white text-2xl sm:text-4xl font-heading">Souvenir Shop</h1>
+      <p class="font-body text-white italic text-base sm:text-2xl mt-2">Souvenir, sapori e collezioni originali per portare a casa un pezzo di Lago di Lecco.</p>
+      <p class="font-body text-white text-sm sm:text-xl italic mt-3">Un concept store dove il territorio si racconta attraverso oggetti, gusto e dettagli autentici.</p>
+      <button type="button" class="bg-heading text-white rounded-md p-2 mt-4"><a href="#mappa">Vienici A Trovare</a></button>
+    </div>
   </div>
 </section>
