@@ -8,6 +8,8 @@
   --color-beije:#EDE8D0;
   --color-terracotta:#9E3A26;
   --color-lake:#5A8C82;
+  --color-heading:var(--color-sky-500);
+  --color-text-color:var(--color-olive-600);
 
   --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
@@ -20,9 +22,35 @@ body {
   margin:0;
   padding:0;
   width:100%;
-  overflow-x:clip;
-  background-color:var(--color-beije);
+  overflow-x:clip; 
 }
+/* body::before { */
+/*     content: ""; */
+/*     position: fixed; */
+/*     top: -20%;  */
+/*     left: 0; */
+/*     width: 100%; */
+/*     height: 140%;  */
+/*     background-image: url('/images/background.jpeg'); */
+/*     background-size: cover; */
+/*     background-position: center; */
+/*     background-repeat: no-repeat; */
+/*     z-index: -1; */
+/*     pointer-events: none; */
+/**/
+/**/
+/*     animation: parallax-scroll linear; */
+/*     animation-timeline: scroll(root block); */
+/*   } */
+/**/
+/*   @keyframes parallax-scroll { */
+/*     from { */
+/*       transform: translateY(0); */
+/*     } */
+/*     to { */
+/*       transform: translateY(-20%);  */
+/*     } */
+/*   } */
 
 /* --- Embla Carousel Styles --- */
 .embla {

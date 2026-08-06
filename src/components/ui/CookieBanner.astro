@@ -7,7 +7,7 @@
   class="
   fixed bottom-4 left-4 right-4 z-50
   sm:left-auto sm:w-full sm:max-w-sm
-  bg-lake border border-terracotta/60 rounded-lg
+  bg-white border border-terracotta/60 rounded-lg
   px-6 py-6
   flex flex-col gap-4
   transition-transform duration-500 ease-out
@@ -15,10 +15,10 @@
 >
   <!-- Main Message -->
   <div class="flex flex-col gap-2">
-    <p class="font-heading text-beije text-lg">Questo sito usa i cookie</p>
-    <p class="font-body text-beije/90 text-sm leading-relaxed">
+    <p class="font-heading text-heading text-lg">Questo sito usa i cookie</p>
+    <p class="font-body text-black text-lg leading-relaxed">
       Utilizziamo Google Analytics per analizzare il traffico del sito in forma anonima. Nessun dato viene venduto, e il tracciamento parte solo con il tuo consenso.
-      <a href="/privacy" class="text-terracotta hover:text-beije underline transition-colors duration-200">
+      <a href="/privacy" class="text-heading hover:text-teal-800 underline transition-colors duration-200">
         Leggi la privacy policy
       </a>
     </p>
@@ -58,19 +58,19 @@
   <div class="flex flex-row gap-2">
     <button
       id="cookie-decline"
-      class="flex-1 px-3 py-2 rounded-lg font-body text-xs border border-beije/30 text-beije hover:border-beije/60 transition-all duration-200"
+      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-md border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
     >
       Rifiuta
     </button>
     <button
       id="cookie-customize"
-      class="flex-1 px-3 py-2 rounded-lg font-body text-xs border border-beije/30 text-beije hover:border-beije/60 transition-all duration-200"
+      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-md border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
     >
       Personalizza
     </button>
     <button
       id="cookie-accept"
-      class="flex-1 px-3 py-2 rounded-lg font-body text-xs bg-terracotta text-beije hover:bg-terracotta/80 transition-colors duration-200"
+      class="flex-1 px-3 py-2 rounded-lg font-body text-md bg-heading text-black hover:bg-teal-800 hover:text-white duration-200"
     >
       Accetta tutti
     </button>

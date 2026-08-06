@@ -1,23 +1,27 @@
 ---
 
+import fb from "../assets/icons/facebook (1).svg?raw";
+import ig from "../assets/icons/instagram.svg?raw"
 ---
-<footer class="bg-teal-800/20 text-cream py-10 px-6">
+<footer class="bg-heading/30 text-text-color py-10 px-6">
 
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left">
-    
+
     <div>
-      <h3 class="text-2xl font-heading text-terracotta">La Boutique del Lago</h3>
-      <p class="font-body text-sm mt-2 opacity-80">
-        Via [Indirizzo], Lecco (LC)<br>
-        P.IVA [xxxxxxxxxxx]
+      <h3 class="text-2xl font-heading text-teal-800">La Boutique del Lago</h3>
+      <p class="font-body text-sm mt-2">
+        La Boutique del Lago S.r.l.<br>
+        Via Azzone Visconti 74, Lecco (LC)<br>
+        P.IVA [xxxxxxxxxxx]<br>
+        Contatto: laboutiquedellagolc@gmail.com
       </p>
     </div>
-<button
-  onclick="window.reopenCookieBanner()"
-        class="font-body text-xs  hover:text-cream transition-colors duration-200 cursor-pointer hover:text-terracotta"
->
-  Cookie Preferences
-</button>
+    <button
+      onclick="window.reopenCookieBanner()"
+      class="font-body text-md duration-400 cursor-pointer hover:text-teal-800 hover:scale-105"
+    >
+      Cookie Preferences
+    </button>
 
     <div class="flex gap-6 font-body text-sm">
       <a href="#about" class="hover:text-terracotta transition">Chi siamo</a>
@@ -29,10 +33,9 @@
 
     <div class="flex gap-4">
       <a href="https://instagram.com/TUO_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-terracotta transition">
-        <!-- icona Instagram -->
-      </a>
-      <a href="https://facebook.com/TUA_PAGINA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-terracotta transition">
-        <!-- icona Facebook -->
+        <div set:html={ig} class="text-heading [&>svg]:w-6 [&>svg]:h-6"></div>
+        <a href="https://facebook.com/TUA_PAGINA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-terracotta transition"> 
+          <div set:html={fb} class="text-heading [&>svg]:w-6 [&>svg]:h-6" /></a>
       </a>
     </div>
   </div>
