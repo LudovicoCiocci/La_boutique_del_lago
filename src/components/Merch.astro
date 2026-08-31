@@ -1,0 +1,74 @@
+---
+import ImageCarousel from '../components/ui/ImageCarousel.astro';
+
+import shirt_1 from '../assets/appearles/shirt_1.jpeg';
+import shirt_2 from '../assets/appearles/shirt_2.jpeg';
+import shirt_3 from '../assets/appearles/shirt_3.jpeg';
+import shirt_4 from '../assets/appearles/shirt_4.jpeg';
+import shirt_5 from '../assets/appearles/shirt_5.jpeg';
+import shirt_6 from '../assets/appearles/shirt_6.jpeg';
+
+const galleryImages = [
+  {
+    src: shirt_1,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  },
+  {
+    src: shirt_2,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  },
+  {
+    src: shirt_3,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  },
+  {
+    src: shirt_4,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  },
+  {
+    src: shirt_5,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  },
+  {
+    src: shirt_6,
+    alt: 'T-shirt in collezione',
+    caption: 'La nostra collezione'
+  }
+];
+---
+
+<section id="merch" class="py-10 border-b border-teal-600/40 bg-white">
+  <div class="title text-center mb-8 px-4">
+    <h2 class="text-3xl font-heading text-heading">Il Nostro Merchandising</h2>
+  </div>
+
+  <div class="flex flex-col md:flex-row md:max-w-7xl
+    md:mx-auto md:px-4 gap-8 lg:gap-12
+    items-center justify-center
+    px-4">
+
+    <div class="w-full md:w-1/2 min-w-0 sm:order-1">
+      <ImageCarousel images={galleryImages} />
+    </div>
+
+    <!-- Text column -->
+    <div class="reveal-from-right w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15 sm:order-2">
+      <h3 class="text-2xl font-heading italic text-heading mb-4">Porta il Lago con te</h3>
+      <p class="leading-7 text-2xl font-body text-text-color text-shadow-lg">
+        Una collezione originale di t-shirt pensata per chi vuole portare con sé 
+        lo spirito del Lago di Lecco, oltre il souvenir.
+        <br><br>
+        Tessuti morbidi, stampe che raccontano il territorio con un tocco contemporaneo, 
+        e design nati dalla nostra idea di un turismo autentico.
+        <br><br>
+        Ogni capo è un piccolo pezzo della boutique da indossare 
+        <span class="font-bold italic text-heading">ovunque il lago ti porti</span>.
+      </p>
+    </div>
+  </div>
+</section>
