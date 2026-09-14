@@ -2,9 +2,11 @@
 import ImageCarousel from '../components/ui/ImageCarousel.astro';
 
 
-import vino_generale from '../assets/vino/vini_generale.jpeg';
-import vino_dx from '../assets/vino/vini_dx.jpeg';
-import vino_sx from '../assets/vino/vini_sx.jpeg';
+import vino_generale from '../assets/wine_and_oil/vini_generale.jpeg';
+import vino_dx from '../assets/wine_and_oil/vini_dx.jpeg';
+import vino_sx from '../assets/wine_and_oil/vini_sx.jpeg';
+import wines from '../assets/wine_and_oil/wines.jpeg';
+import oils from '../assets/wine_and_oil/oils.jpeg';
 
 const galleryImages = [
   {
@@ -20,7 +22,17 @@ const galleryImages = [
   {
     src: vino_sx,
     alt: 'Specialità della casa',
-    caption: 'I nostri vini'
+    caption: 'I nostri vini',
+  },
+  {
+    src: wines,
+    alt: 'il nostro vino locale',
+    catpion: 'I nostri vini',
+  },
+{
+    src: oils ,
+    alt: 'olio artigianale',
+    catpion: 'Il nostro Olio'
   }
 ];
 ---
