@@ -1,16 +1,123 @@
 ---
-import "../styles/global.css" 
+import "../styles/global.css"
 import CookieBanner from "../components/ui/CookieBanner.astro";
+
+// Must match `site` in astro.config.mjs
+const SITE_URL = 'https://www.laboutiquedellago.com';
+
+const props = Astro.props;
+const {
+  title = 'La Boutique Del Lago | Souvenir ed eccellenze del Lago di Lecco',
+  description = 'Concept store a Lecco: souvenir del territorio, pasta artigianale, vini locali e utensili in legno. Prodotti autentici del Lago di Lecco, dal 2024 in Via Azzone Visconti 74.',
+  image = '/images/og-image.jpg',
+  noindex = false,
+  jsonLd = [],
+  includeStoreSchema = true,
+} = props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site ?? SITE_URL).href;
+const ogImage = new URL(image, Astro.site ?? SITE_URL).href;
+
+const storeSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Store',
+  '@id': `${canonical}#store`,
+  name: 'La Boutique Del Lago',
+  description,
+  url: canonical,
+  image: ogImage,
+  email: 'laboutiquedellagolc@gmail.com',
+  vatID: 'IT04288870134',
+  priceRange: '€€',
+  currenciesAccepted: 'EUR',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Via Azzone Visconti 74',
+    addressLocality: 'Lecco',
+    addressRegion: 'LC',
+    postalCode: '23900',
+    addressCountry: 'IT',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 45.849243,
+    longitude: 9.39009,
+  },
+  areaServed: {
+    '@type': 'City',
+    name: 'Lecco',
+  },
+  sameAs: [
+    'https://www.instagram.com/laboutiquedellagodilecco',
+    'https://www.facebook.com/laboutiquedellagodilecco',
+  ],
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ],
+      opens: '10:00',
+      closes: '19:30',
+    },
+  ],
+  acceptsReservations: 'False',
+  paymentAccepted: 'Cash, Credit Card',
+};
 ---
 
+<!doctype html>
 <html lang="it" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
-		<title>La Boutique Del Lago</title>
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+		<meta name="theme-color" content="#0ea5e9" />
+		<meta name="author" content="La Boutique Del Lago" />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" sizes="any" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="La Boutique Del Lago" />
+		<meta property="og:locale" content="it_IT" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="La Boutique Del Lago, concept store sul Lago di Lecco" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+
+		<meta name="geo.region" content="IT-LC" />
+		<meta name="geo.placename" content="Lecco" />
+		<meta name="geo.position" content="45.849243;9.39009" />
+		<meta name="ICBM" content="45.849243, 9.39009" />
+
+		<link rel="sitemap" href="/sitemap-index.xml" />
+
+		{
+			[...(includeStoreSchema ? [storeSchema] : []), ...jsonLd].map((schema) => (
+				<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+			))
+		}
 	</head>
 	<body>
 		        <slot />

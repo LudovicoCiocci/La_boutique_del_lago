@@ -8,13 +8,13 @@ import ig from "../assets/icons/instagram.svg?raw"
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left">
 
     <div>
-      <h3 class="text-2xl font-heading text-teal-800">La Boutique del Lago</h3>
-      <p class="font-body text-sm mt-2">
+      <h2 class="text-2xl font-heading text-teal-800">La Boutique del Lago</h2>
+      <address class="font-body text-sm mt-2 not-italic">
         La Boutique del Lago S.r.l.<br>
-        Via Azzone Visconti 74, Lecco (LC)<br>
-        P.IVA [xxxxxxxxxxx]<br>
-        Contatto: laboutiquedellagolc@gmail.com
-      </p>
+        Via Azzone Visconti 74, 23900 Lecco (LC)<br>
+        P.IVA e C.F. 04288870134<br>
+        Contatto: <a class="underline hover:text-terracotta" href="mailto:laboutiquedellagolc@gmail.com">laboutiquedellagolc@gmail.com</a>
+      </address>
     </div>
     <button
       onclick="window.reopenCookieBanner()"
@@ -23,19 +23,33 @@ import ig from "../assets/icons/instagram.svg?raw"
       Cookie Preferences
     </button>
 
-    <div class="flex gap-6 font-body text-sm">
+    <nav aria-label="Link rapidi" class="flex gap-6 font-body text-sm">
       <a href="#about" class="hover:text-terracotta transition">Chi siamo</a>
+      <a href="#merch" class="hover:text-terracotta transition">Merchandising</a>
       <a href="#pasta" class="hover:text-terracotta transition">Pasta</a>
       <a href="#vini" class="hover:text-terracotta transition">Vini</a>
       <a href="#utensili" class="hover:text-terracotta transition">Utensili</a>
-      <a href="#map" class="hover:text-terracotta transition">Dove siamo</a>
-    </div>
+      <a href="#mappa" class="hover:text-terracotta transition">Dove siamo</a>
+    </nav>
 
     <div class="flex gap-4">
-      <a href="https://instagram.com/TUO_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-terracotta transition">
+      <a
+        href="https://www.instagram.com/laboutiquedellagodilecco"
+        target="_blank"
+        rel="noopener noreferrer me"
+        aria-label="Instagram La Boutique Del Lago"
+        class="hover:text-terracotta transition"
+      >
         <div set:html={ig} class="text-heading [&>svg]:w-6 [&>svg]:h-6"></div>
-        <a href="https://facebook.com/TUA_PAGINA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-terracotta transition"> 
-          <div set:html={fb} class="text-heading [&>svg]:w-6 [&>svg]:h-6" /></a>
+      </a>
+      <a
+        href="https://www.facebook.com/laboutiquedellagodilecco"
+        target="_blank"
+        rel="noopener noreferrer me"
+        aria-label="Facebook La Boutique Del Lago"
+        class="hover:text-terracotta transition"
+      >
+        <div set:html={fb} class="text-heading [&>svg]:w-6 [&>svg]:h-6"></div>
       </a>
     </div>
   </div>
