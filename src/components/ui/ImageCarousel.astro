@@ -41,26 +41,21 @@ function resolveImgSrc(src) {
     </button>
   </div>
 
-  <!-- Shared Lightbox Dialog -->
   <dialog class="lightbox-dialog backdrop:bg-black/90 bg-transparent p-0 m-auto max-w-[95vw] max-h-[95vh] rounded-2xl outline-none">
     <div class="relative flex items-center justify-center p-4 min-h-[50vh]">
-      <!-- Close Button -->
       <button class="lightbox-close absolute top-4 right-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-2.5 rounded-full transition-all" type="button" aria-label="Close fullscreen view">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
 
-      <!-- Prev Button -->
       <button class="lightbox-prev absolute left-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Previous image">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
 
-      <!-- Main Fullscreen Content -->
       <div class="flex flex-col items-center">
         <img class="lightbox-img object-contain max-h-[80vh] w-auto rounded-lg select-none" src="" alt="" />
         <p class="lightbox-caption text-white/80 text-sm mt-3 text-center drop-shadow-lg"></p>
       </div>
 
-      <!-- Next Button -->
       <button class="lightbox-next absolute right-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Next image">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
@@ -80,7 +75,6 @@ function resolveImgSrc(src) {
       const nextBtnNode = carouselNode.querySelector('.embla__next');
       const dotsNode = carouselNode.querySelector('.embla__dots');
 
-      // Lightbox elements
       const dialog = carouselNode.querySelector('.lightbox-dialog');
       const lightboxImg = carouselNode.querySelector('.lightbox-img');
       const lightboxCaption = carouselNode.querySelector('.lightbox-caption');
@@ -93,7 +87,6 @@ function resolveImgSrc(src) {
 
       const emblaApi = EmblaCarousel(viewportNode, { loop: true });
 
-      // --- Lightbox Syncing ---
       const updateLightbox = () => {
         if (!dialog?.open || !lightboxImg) return;
         
@@ -109,7 +102,6 @@ function resolveImgSrc(src) {
         }
       };
 
-      // Open Lightbox on image click
       slideImgs.forEach((img, index) => {
         img.addEventListener('click', () => {
           emblaApi.scrollTo(index);
@@ -121,10 +113,10 @@ function resolveImgSrc(src) {
         });
       });
 
-      // Update Lightbox dynamically whenever Embla slides
+      // Keeps the modal in sync when the carousel moves via dots/keys while open.
       emblaApi.on('select', updateLightbox);
 
-      // Lightbox controls delegate directly to Embla
+      // The modal has no index of its own: its arrows drive Embla directly.
       lightboxPrev?.addEventListener('click', (e) => {
         e.stopPropagation();
         emblaApi.scrollPrev();
@@ -135,7 +127,6 @@ function resolveImgSrc(src) {
         emblaApi.scrollNext();
       });
 
-      // Close handling
       const closeLightbox = () => {
         dialog?.close();
         document.body.style.overflow = '';
@@ -149,14 +140,13 @@ function resolveImgSrc(src) {
         document.body.style.overflow = '';
       });
 
-      // Keyboard arrow support inside modal
+      // Keyboard navigation while the modal is open.
       window.addEventListener('keydown', (e) => {
         if (!dialog?.open) return;
         if (e.key === 'ArrowLeft') emblaApi.scrollPrev();
         if (e.key === 'ArrowRight') emblaApi.scrollNext();
       });
 
-      // --- Existing Embla Controls ---
       if (prevBtnNode) prevBtnNode.addEventListener('click', () => emblaApi.scrollPrev());
       if (nextBtnNode) nextBtnNode.addEventListener('click', () => emblaApi.scrollNext());
 

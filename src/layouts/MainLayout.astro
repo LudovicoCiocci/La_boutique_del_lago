@@ -144,8 +144,8 @@ const storeSchema = {
 				);
 
 				targets.forEach((el) => {
-					// Already on screen at load (e.g. deep-link / restored scroll position):
-					// show it immediately so it does not animate in mid-refresh.
+					// Show anything already on screen at load (deep links, restored scroll position)
+					// immediately, so it doesn't animate in mid-refresh.
 					const rect = el.getBoundingClientRect();
 					if (rect.top < window.innerHeight && rect.bottom > 0) {
 						el.classList.add('is-visible');
@@ -158,10 +158,9 @@ const storeSchema = {
 			document.addEventListener('astro:page-load', initReveal);
 		</script>
 		<script>
-			// Smooth scrolling is applied ONLY to explicit in-page link clicks.
+			// Smooth scrolling is applied ONLY to explicit in-page link clicks. Setting
 			// `scroll-behavior: smooth` on <html> would also animate the browser's own
-			// scroll restoration on reload, which made the page glide up from wherever
-			// it was left instead of jumping there instantly.
+			// scroll restoration on reload, making the page glide instead of jumping.
 			function initSmoothAnchors() {
 				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 

@@ -15,14 +15,13 @@
   --font-heading: "Cinzel", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-body: "Cormorant", Garamond, "Baskerville Old Face", "Hoefler Text", Times, serif;}
 
+/* No global scroll-behavior: smooth here on purpose. It would also animate the
+   browser's scroll restoration on reload. Smooth in-page scrolling is handled
+   per-click in src/layouts/MainLayout.astro. */
 html {
   overflow-x: clip;
-  /* No global scroll-behavior: smooth here on purpose. It would also animate the
-     browser's scroll restoration on reload. Smooth in-page scrolling is handled
-     per-click in src/layouts/MainLayout.astro. */
 }
-/* Anchor targets sit below the viewport edge without a sticky header, so no
-   scroll-margin needed; kept explicit so it stays correct if one is added. */
+/* Kept explicit so it stays correct if a sticky header is ever added. */
 [id] {
   scroll-margin-top: 1rem;
 }
@@ -33,35 +32,6 @@ body {
   width:100%;
   overflow-x:clip; 
 }
-/* body::before { */
-/*     content: ""; */
-/*     position: fixed; */
-/*     top: -20%;  */
-/*     left: 0; */
-/*     width: 100%; */
-/*     height: 140%;  */
-/*     background-image: url('/images/background.jpeg'); */
-/*     background-size: cover; */
-/*     background-position: center; */
-/*     background-repeat: no-repeat; */
-/*     z-index: -1; */
-/*     pointer-events: none; */
-/**/
-/**/
-/*     animation: parallax-scroll linear; */
-/*     animation-timeline: scroll(root block); */
-/*   } */
-/**/
-/*   @keyframes parallax-scroll { */
-/*     from { */
-/*       transform: translateY(0); */
-/*     } */
-/*     to { */
-/*       transform: translateY(-20%);  */
-/*     } */
-/*   } */
-
-/* --- Embla Carousel Styles --- */
 .embla {
   --slide-spacing: 1rem;
   --slide-size: 100%;
@@ -120,7 +90,6 @@ body {
   font-size: 0.875rem;
 }
 
-/* Controls & Dots */
 .embla__controls {
   display: flex;
   align-items: center;
@@ -166,7 +135,6 @@ body {
 .embla__dot--selected {
   background:var(--color-terracotta);
 }
-/* Cookie-Banner */
 #cookie-banner {
   transform: translateY(200%);
 }
@@ -174,7 +142,6 @@ body {
 #cookie-banner.is-visible {
   transform: translateY(0);
 }
-/* animations */
 .reveal-from-left,
 .reveal-from-right {
   opacity: 0;
@@ -183,7 +150,6 @@ body {
     transform 700ms ease-out;
 }
 
-/* Distance is set per-direction below; kept small for a natural feel. */
 .reveal-from-left {
   transform: translateX(-100px);
 }

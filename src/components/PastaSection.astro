@@ -5,9 +5,6 @@ import ImageCarousel from '../components/ui/ImageCarousel.astro';
 
 import pizzoccheri from '../assets/pasta/pasta_1.jpeg';
 import pasta_2 from '../assets/pasta/pasta_2a.jpeg';
-// import pasta_3 from '../assets/pasta/pasta_3.jpeg';
-// import pasta_4 from '../assets/pasta/pasta_4.jpeg';
-// import pasta_5 from '../assets/pasta/pasta_5.jpeg';
 
 const galleryImages = [
   {
@@ -20,21 +17,6 @@ const galleryImages = [
     alt: 'Pasta artigianale fresca',
     caption: 'Pasta fatta in casa'
   },
-  // {
-  //   src: pasta_3,
-  //   alt: 'Specialità della casa',
-  //   caption: 'Piatti tradizionali'
-  // },
-  // {
-  //   src:pasta_4,
-  //   alt:'Pasta artigianale',
-  //   caption: 'Pasta artigianale',
-  // },
-  // {
-  //   src:pasta_5,
-  //   alt:'Pasta artigianale',
-  //   caption:'Pasta artigianale',
-  // }
 ];
 ---
 
@@ -52,7 +34,6 @@ const galleryImages = [
       <ImageCarousel images={galleryImages} />
     </div>
 
-    <!-- Text column -->
     <div class="reveal-from-left w-full md:w-1/2 max-w-xl px-4 md:px-0 pb-15 sm:order-1">
       <h3 class="text-2xl font-heading italic text-heading mb-4">Grano, acqua e la pazienza di un tempo</h3>
       <p class="leading-7 text-2xl font-body text-text-color text-shadow-lg">
