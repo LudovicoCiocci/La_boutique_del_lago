@@ -36,7 +36,9 @@
 
     <div class="flex items-center justify-between bg-lake/50 p-2 rounded border border-beije/10">
       <div>
-        <p class="font-bold text-text-color">Cookie analitici</p>
+        <label for="cookie-pref-analytics" class="font-bold text-text-color block cursor-pointer">
+          Cookie analitici
+        </label>
         <p class="text-[11px] text-text-color/70">Ci aiutano a capire come i visitatori interagiscono con il sito.</p>
       </div>
       <input 
@@ -57,19 +59,19 @@
   <div class="flex flex-row gap-2">
     <button
       id="cookie-decline"
-      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-md border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
+      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-base border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
     >
       Rifiuta
     </button>
     <button
       id="cookie-customize"
-      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-md border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
+      class="cursor-pointer flex-1 px-3 py-2 rounded-lg font-body text-base border border-heading text-black hover:bg-teal-800 hover:text-white transition-all duration-200"
     >
       Personalizza
     </button>
     <button
       id="cookie-accept"
-      class="flex-1 px-3 py-2 rounded-lg font-body text-md bg-heading text-black hover:bg-teal-800 hover:text-white duration-200"
+      class="flex-1 px-3 py-2 rounded-lg font-body text-base bg-heading text-black hover:bg-teal-800 hover:text-white duration-200"
     >
       Accetta tutti
     </button>
@@ -78,6 +80,15 @@
 
 <script>
 const GA_MEASUREMENT_ID = 'G-8QXVH7591T';
+
+// Analytics is only meaningful on the live domain. Without this guard, accepting
+// the banner on localhost or a preview URL would send test hits to the client's
+// GA property. Add any staging hostname here only if it should report.
+const GA_HOSTS = ['laboutiquedellago.com', 'www.laboutiquedellago.com'];
+const GA_ALLOWED = GA_HOSTS.includes(window.location.hostname);
+
+// Re-prompt after 6 months: consent should not be treated as permanent.
+const CONSENT_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 
 declare global {
   interface Window {
@@ -100,10 +111,35 @@ const prefsPanel = document.getElementById('cookie-preferences-panel');
 
 const analyticsCheckbox = document.getElementById('cookie-pref-analytics') as HTMLInputElement | null;
 
-const existingConsent = localStorage.getItem('cookie-consent');
+function readConsent() {
+  const raw = localStorage.getItem('cookie-consent');
+  if (!raw) return null;
+
+  // Pre-expiry format was a bare 'accepted' / 'declined' string.
+  if (!raw.startsWith('{')) return { value: raw, at: 0 };
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed?.value !== 'accepted' && parsed?.value !== 'declined') return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+const existingConsent = readConsent();
+
+// An expired or unrecognised record is treated as "no decision yet".
+const consentIsFresh = existingConsent !== null
+  && Date.now() - (existingConsent.at || 0) < CONSENT_MAX_AGE_MS;
+const consentValue = consentIsFresh ? existingConsent.value : null;
+
+if (existingConsent && !consentIsFresh) {
+  localStorage.removeItem('cookie-consent');
+}
 
 gtag('consent', 'default', {
-  'analytics_storage': existingConsent === 'accepted' ? 'granted' : 'denied',
+  'analytics_storage': consentValue === 'accepted' ? 'granted' : 'denied',
   'ad_storage': 'denied',
   'ad_user_data': 'denied',
   'ad_personalization': 'denied'
@@ -117,7 +153,38 @@ function hideBanner() {
   banner?.classList.remove('is-visible');
 }
 
+// GA cookies outlive a consent change, so a decline after an accept would leave
+// them in place until their own (multi-year) expiry. Expire them on every path
+// that revokes consent, across the current host and its parents.
+function clearAnalyticsCookies() {
+  const suffixes = ['', `_${GA_MEASUREMENT_ID.slice(2)}`];
+  const names = [
+    ...suffixes.map((s) => `_ga${s}`),
+    '_gid',
+    '_gat',
+    '_gat_thr',
+  ];
+
+  const hosts = window.location.hostname.split('.');
+  const domains = [''];
+  for (let i = 0; i < hosts.length - 1; i++) {
+    domains.push(hosts.slice(i).join('.'));
+  }
+
+  for (const name of names) {
+    for (const domain of domains) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain ? `; domain=${domain}` : ''}`;
+    }
+  }
+}
+
+function revokeAnalytics() {
+  gtag('consent', 'update', { 'analytics_storage': 'denied' });
+  clearAnalyticsCookies();
+}
+
 function loadAnalytics() {
+  if (!GA_ALLOWED) return;
   if (!document.getElementById('google-analytics-tag')) {
     const script = document.createElement('script');
     script.id = 'google-analytics-tag';
@@ -132,18 +199,21 @@ function loadAnalytics() {
 }
 
 function setConsent(value: 'accepted' | 'declined') {
-  localStorage.setItem('cookie-consent', value);
+  localStorage.setItem('cookie-consent', JSON.stringify({
+    value,
+    at: Date.now(),
+  }));
   hideBanner();
   if (value === 'accepted') {
     loadAnalytics();
   } else {
-    gtag('consent', 'update', { 'analytics_storage': 'denied' });
+    revokeAnalytics();
   }
 }
 
-if (!existingConsent) {
+if (!consentValue) {
   showBanner();
-} else if (existingConsent === 'accepted') {
+} else if (consentValue === 'accepted') {
   loadAnalytics();
 }
 
@@ -153,8 +223,7 @@ declineBtn?.addEventListener('click', () => setConsent('declined'));
 customizeBtn?.addEventListener('click', () => {
   prefsPanel?.classList.toggle('hidden');
   if (analyticsCheckbox) {
-    const currentConsent = localStorage.getItem('cookie-consent');
-    analyticsCheckbox.checked = currentConsent === 'accepted';
+    analyticsCheckbox.checked = consentValue === 'accepted';
   }
 });
 
@@ -167,8 +236,12 @@ savePrefsBtn?.addEventListener('click', () => {
 });
 
 window.reopenCookieBanner = () => {
+  // Clearing the stored choice without revoking would re-prompt the visitor
+  // while analytics carried on in the background, so revoke first.
+  revokeAnalytics();
   localStorage.removeItem('cookie-consent');
-  prefsPanel?.classList.add('hidden'); 
+  prefsPanel?.classList.add('hidden');
+  if (analyticsCheckbox) analyticsCheckbox.checked = false;
   showBanner();
 };
 </script>

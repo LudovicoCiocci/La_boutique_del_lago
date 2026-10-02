@@ -106,14 +106,27 @@ the consent banner. `G-8QXVH7591T` is defined there in `GA_MEASUREMENT_ID`.
 
 The banner is a real consent gate, which matters for an EU/Italian site: Consent Mode
 defaults `analytics_storage` to `denied`, and `gtag/js` is only injected once the visitor
-accepts — so no analytics script is ever fetched by someone who declined. The choice is
-persisted in `localStorage` under `cookie-consent` and re-applied on later visits.
+accepts — so no analytics script is ever fetched by someone who declined.
 
-`reopenCookieBanner()` is exposed on `window` so visitors can change their mind from the
-privacy page.
+Safety behaviours worth preserving when editing this file:
+
+- **Hostname guard** — `GA_HOSTS` only matches the live domain, so accepting the banner on
+  `localhost` or a preview URL never sends test hits to the client's property.
+- **Cookie clearing** — declining (or reopening preferences) expires `_ga`, `_ga_<ID>`,
+  `_gid`, `_gat`, `_gat_thr` across the host and its parent domains. Without this, cookies
+  from a previous acceptance survive until their own multi-year expiry.
+- **Revoke on reopen** — `reopenCookieBanner()` revokes consent *before* clearing the stored
+  choice, otherwise the visitor is re-prompted while analytics keeps running.
+- **Six-month expiry** — the stored record is `{ value, at }` and is treated as no decision
+  once stale, re-prompting the visitor. The pre-expiry bare-string format is still readable.
+
+`reopenCookieBanner()` is exposed on `window` and called by the "Cookie Preferences" button
+in the footer.
 
 ⚠️ Keep the two coupled: if you add another analytics or ad vendor, load it inside the
-same consent check, never unconditionally in `MainLayout.astro`.
+same consent check, never unconditionally in `MainLayout.astro`. Note that revoking cannot
+un-load an already-executed `gtag.js`; it stops further storage, and a reload completes the
+teardown.
 
 ## 📚 Documentation
 
