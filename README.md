@@ -99,11 +99,21 @@ browsers that pick the last matching icon.
 Browsers cache favicons aggressively — expect a hard reload or a re-pin before
 seeing changes.
 
-## 🍪 Cookie banner
+## 🍪 Analytics & cookie consent
 
-`src/components/ui/CookieBanner.astro` only reads, writes and persists
-`localStorage`. It is presentation, not consent enforcement — if real analytics
-are ever added, gate them on the stored choice.
+Google Analytics 4 is loaded by `src/components/ui/CookieBanner.astro`, which also owns
+the consent banner. `G-8QXVH7591T` is defined there in `GA_MEASUREMENT_ID`.
+
+The banner is a real consent gate, which matters for an EU/Italian site: Consent Mode
+defaults `analytics_storage` to `denied`, and `gtag/js` is only injected once the visitor
+accepts — so no analytics script is ever fetched by someone who declined. The choice is
+persisted in `localStorage` under `cookie-consent` and re-applied on later visits.
+
+`reopenCookieBanner()` is exposed on `window` so visitors can change their mind from the
+privacy page.
+
+⚠️ Keep the two coupled: if you add another analytics or ad vendor, load it inside the
+same consent check, never unconditionally in `MainLayout.astro`.
 
 ## 📚 Documentation
 

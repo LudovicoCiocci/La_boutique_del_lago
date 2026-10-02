@@ -78,10 +78,7 @@
 </div>
 
 <script>
-// PLACEHOLDER: real GA4 measurement ID (starts with "G-"). Until this is set, the
-// banner still records the consent choice but no analytics script is ever injected.
 const GA_MEASUREMENT_ID = 'G-8QXVH7591T';
-const GA_ENABLED = !GA_MEASUREMENT_ID.startsWith('G-');
 
 declare global {
   interface Window {
@@ -122,7 +119,6 @@ function hideBanner() {
 }
 
 function loadAnalytics() {
-  if (!GA_ENABLED) return;
   if (!document.getElementById('google-analytics-tag')) {
     const script = document.createElement('script');
     script.id = 'google-analytics-tag';
@@ -131,7 +127,7 @@ function loadAnalytics() {
     document.head.appendChild(script);
 
     gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID, { 'anonymize_ip': true });
+    gtag('config', GA_MEASUREMENT_ID);
   }
   gtag('consent', 'update', { 'analytics_storage': 'granted' });
 }
