@@ -3,8 +3,8 @@
 Marketing site for **La Boutique Del Lago**, a concept store in Lecco selling territorial
 souvenirs, artisan pasta, local wines and oils, and wooden utensils.
 
-Built with [Astro](https://astro.build) as a fully static site — no client-side framework
-is shipped. Live at <https://www.laboutiquedellago.com>.
+Built with [Astro](https://astro.build) as a fully static site -
+no client-side framework is shipped. Live at <https://www.laboutiquedellago.com>.
 
 ## 🚀 Getting started
 
