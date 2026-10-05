@@ -41,24 +41,31 @@ function resolveImgSrc(src) {
     </button>
   </div>
 
-  <dialog class="lightbox-dialog backdrop:bg-black/90 bg-transparent p-0 m-auto max-w-[95vw] max-h-[95vh] rounded-2xl outline-none">
-    <div class="relative flex items-center justify-center p-4 min-h-[50vh]">
-      <button class="lightbox-close absolute top-4 right-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-2.5 rounded-full transition-all" type="button" aria-label="Close fullscreen view">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+  <dialog class="lightbox-dialog fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 outline-none backdrop:bg-black/60">
+    <div class="lightbox-stage relative flex h-full w-full items-center justify-center overflow-hidden bg-black/80 p-3">
+      <!-- Shrink-wraps the image, so the nav row below is exactly as wide as
+           the picture and the arrows sit flush with its edges. -->
+      <!-- pt-12 reserves a band above the image for the close button, leaving the
+           same gap-2 clearance the arrows have below the image. -->
+      <div class="lightbox-frame relative flex max-w-full flex-col items-center gap-2 pt-13">
+        <img class="lightbox-img object-contain select-none" src="" alt="" draggable="false" />
 
-      <button class="lightbox-prev absolute left-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Previous image">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-      </button>
+        <div class="lightbox-nav flex w-full items-center justify-between gap-2">
+          <button class="lightbox-prev shrink-0 bg-teal-800/60 text-white backdrop-blur-sm hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Immagine precedente">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
 
-      <div class="flex flex-col items-center">
-        <img class="lightbox-img object-contain max-h-[80vh] w-auto rounded-lg select-none" src="" alt="" />
-        <p class="lightbox-caption text-white/80 text-sm mt-3 text-center drop-shadow-lg"></p>
+          <p class="lightbox-caption min-w-0 flex-1 text-center text-white/80 text-sm drop-shadow-lg"></p>
+
+          <button class="lightbox-next shrink-0 bg-teal-800/60 text-white backdrop-blur-sm hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Immagine successiva">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <button class="lightbox-close absolute right-0 top-0 z-30 bg-teal-800/60 text-white backdrop-blur-sm hover:bg-terracotta p-2.5 rounded-full transition-all" type="button" aria-label="Chiudi la vista a schermo intero">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-
-      <button class="lightbox-next absolute right-4 z-20 bg-teal-800/60 text-white hover:bg-terracotta p-3 rounded-full transition-all hover:scale-110" type="button" aria-label="Next image">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-      </button>
     </div>
   </dialog>
 </div>
@@ -76,6 +83,7 @@ function resolveImgSrc(src) {
       const dotsNode = carouselNode.querySelector('.embla__dots');
 
       const dialog = carouselNode.querySelector('.lightbox-dialog');
+      const lightboxStage = carouselNode.querySelector('.lightbox-stage');
       const lightboxImg = carouselNode.querySelector('.lightbox-img');
       const lightboxCaption = carouselNode.querySelector('.lightbox-caption');
       const lightboxClose = carouselNode.querySelector('.lightbox-close');
@@ -87,29 +95,48 @@ function resolveImgSrc(src) {
 
       const emblaApi = EmblaCarousel(viewportNode, { loop: true });
 
+      // Direction of the last change, so the new image can slide in from the
+      // side the user came from. Set by the navigation helpers rather than
+      // inferred from indices: with loop:true the index wraps, so 0 -> last
+      // would look like "previous" even when the user swiped forward.
+      let lightboxDirection = 0;
+
       const updateLightbox = () => {
         if (!dialog?.open || !lightboxImg) return;
-        
+
         const selectedIndex = emblaApi.selectedScrollSnap();
         const activeSlideImg = slideImgs[selectedIndex];
 
-        if (activeSlideImg) {
-          lightboxImg.src = activeSlideImg.src;
-          lightboxImg.alt = activeSlideImg.alt;
-          if (lightboxCaption) {
-            lightboxCaption.textContent = activeSlideImg.dataset.caption || '';
-          }
+        if (!activeSlideImg) return;
+
+        lightboxImg.src = activeSlideImg.src;
+        lightboxImg.alt = activeSlideImg.alt;
+        if (lightboxCaption) {
+          lightboxCaption.textContent = activeSlideImg.dataset.caption || '';
         }
+
+        if (lightboxDirection !== 0) {
+          lightboxImg.classList.remove('lightbox-img--from-left', 'lightbox-img--from-right');
+          void lightboxImg.offsetWidth;
+          lightboxImg.classList.add(
+            lightboxDirection > 0 ? 'lightbox-img--from-left' : 'lightbox-img--from-right'
+          );
+        }
+      };
+
+      const goTo = (direction, move) => {
+        lightboxDirection = direction;
+        move();
       };
 
       slideImgs.forEach((img, index) => {
         img.addEventListener('click', () => {
-          emblaApi.scrollTo(index);
-          if (dialog) {
-            dialog.showModal();
-            document.body.style.overflow = 'hidden';
-            updateLightbox();
-          }
+          if (!dialog) return;
+          if (emblaApi.selectedScrollSnap() !== index) emblaApi.scrollTo(index);
+          lightboxDirection = 0;
+          dialog.showModal();
+          document.body.style.overflow = 'hidden';
+          updateLightbox();
         });
       });
 
@@ -119,13 +146,33 @@ function resolveImgSrc(src) {
       // The modal has no index of its own: its arrows drive Embla directly.
       lightboxPrev?.addEventListener('click', (e) => {
         e.stopPropagation();
-        emblaApi.scrollPrev();
+        goTo(-1, () => emblaApi.scrollPrev());
       });
 
       lightboxNext?.addEventListener('click', (e) => {
         e.stopPropagation();
-        emblaApi.scrollNext();
+        goTo(1, () => emblaApi.scrollNext());
       });
+
+      // Swipe to move between images while the modal is open.
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      lightboxStage?.addEventListener('touchstart', (e) => {
+        const touch = e.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+      }, { passive: true });
+
+      lightboxStage?.addEventListener('touchend', (e) => {
+        if (!dialog?.open) return;
+        const touch = e.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        if (deltaX < 0) goTo(1, () => emblaApi.scrollNext());
+        else goTo(-1, () => emblaApi.scrollPrev());
+      }, { passive: true });
 
       const closeLightbox = () => {
         dialog?.close();
@@ -133,9 +180,17 @@ function resolveImgSrc(src) {
       };
 
       lightboxClose?.addEventListener('click', closeLightbox);
+
+      // Tap anywhere on the backdrop (but not the image, caption or a button)
+      // to dismiss.
       dialog?.addEventListener('click', (e) => {
-        if (e.target === dialog) closeLightbox();
+        const target = e.target;
+        const isInteractive =
+          target instanceof Element &&
+          target.closest('.lightbox-img, .lightbox-caption, .lightbox-nav, .lightbox-close');
+        if (!isInteractive) closeLightbox();
       });
+
       dialog?.addEventListener('close', () => {
         document.body.style.overflow = '';
       });
@@ -143,8 +198,8 @@ function resolveImgSrc(src) {
       // Keyboard navigation while the modal is open.
       window.addEventListener('keydown', (e) => {
         if (!dialog?.open) return;
-        if (e.key === 'ArrowLeft') emblaApi.scrollPrev();
-        if (e.key === 'ArrowRight') emblaApi.scrollNext();
+        if (e.key === 'ArrowLeft') goTo(-1, () => emblaApi.scrollPrev());
+        if (e.key === 'ArrowRight') goTo(1, () => emblaApi.scrollNext());
       });
 
       if (prevBtnNode) prevBtnNode.addEventListener('click', () => emblaApi.scrollPrev());
