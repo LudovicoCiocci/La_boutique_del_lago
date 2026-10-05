@@ -120,6 +120,27 @@ const storeSchema = {
 			))
 		}
 		<script>
+			// iOS Safari restores the URL fragment on load, so once an in-page anchor
+			// has written "#mappa" into the address bar, every reload drops the visitor
+			// at the map instead of the hero. Take over restoration: honour the fragment
+			// only for a genuine deep link, i.e. one this page did not tag itself.
+			if ('scrollRestoration' in history) {
+				history.scrollRestoration = 'manual';
+			}
+
+			const hashFromSmoothScroll = Boolean(history.state?.smoothAnchor);
+
+			if (hashFromSmoothScroll) {
+				history.replaceState(null, '', location.pathname + location.search);
+			}
+
+			if (hashFromSmoothScroll || !location.hash) {
+				window.scrollTo(0, 0);
+				// Also covers the bfcache restore, which bypasses scrollRestoration.
+				window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+			}
+		</script>
+		<script>
 			const REVEAL_SELECTOR = '.reveal-from-left, .reveal-from-right';
 
 			function initReveal() {
@@ -180,8 +201,10 @@ const storeSchema = {
 					event.preventDefault();
 					target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-					// Keep the URL and keyboard focus in sync with the manual scroll.
-					history.replaceState(null, '', hash);
+// Keep the URL and keyboard focus in sync with the manual scroll. The
+				// `smoothAnchor` marker is what lets the script above tell this apart
+				// from a real deep link when the page is reloaded.
+				history.replaceState({ smoothAnchor: true }, '', hash);
 					target.setAttribute('tabindex', '-1');
 					(target as HTMLElement).focus({ preventScroll: true });
 				});

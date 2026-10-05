@@ -154,25 +154,96 @@ function resolveImgSrc(src) {
         goTo(1, () => emblaApi.scrollNext());
       });
 
-      // Swipe to move between images while the modal is open.
-      let touchStartX = 0;
-      let touchStartY = 0;
+      // Swipe to move between images while the modal is open. The image follows
+      // the pointer instead of jumping on release, so the gesture reads as a
+      // drag. `touch-action: none` on the stage (see global.css) is what stops
+      // iOS from stealing the gesture for the page scroll behind the dialog.
+      const DRAG_COMMIT = 60;
+      const DRAG_EXIT = 120;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      lightboxStage?.addEventListener('touchstart', (e) => {
-        const touch = e.changedTouches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-      }, { passive: true });
+      let dragStartX = null;
+      let dragPointerId = null;
+      let dragOffset = 0;
+      let didDrag = false;
 
-      lightboxStage?.addEventListener('touchend', (e) => {
-        if (!dialog?.open) return;
-        const touch = e.changedTouches[0];
-        const deltaX = touch.clientX - touchStartX;
-        const deltaY = touch.clientY - touchStartY;
-        if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
-        if (deltaX < 0) goTo(1, () => emblaApi.scrollNext());
-        else goTo(-1, () => emblaApi.scrollPrev());
-      }, { passive: true });
+      const resetDragStyles = () => {
+        lightboxImg.style.transition = '';
+        lightboxImg.style.transform = '';
+        lightboxImg.style.opacity = '';
+      };
+
+      const finishDrag = (forward) => {
+        const dir = forward ? 1 : -1;
+
+        if (reduceMotion) {
+          resetDragStyles();
+          lightboxDirection = 0;
+          if (forward) emblaApi.scrollNext();
+          else emblaApi.scrollPrev();
+          return;
+        }
+
+        // Slide the outgoing image off first, swap the source once it is out of
+        // the way, then bring the new one in from the opposite side.
+        lightboxImg.animate(
+          [
+            { transform: `translateX(${dragOffset}px)`, opacity: 1 },
+            { transform: `translateX(${dir * DRAG_EXIT}px)`, opacity: 0 },
+          ],
+          { duration: 160, easing: 'ease-in', fill: 'forwards' },
+        ).finished.then(() => {
+          if (!dialog?.open) return;
+          resetDragStyles();
+          lightboxDirection = 0;
+          if (forward) emblaApi.scrollNext();
+          else emblaApi.scrollPrev();
+          lightboxImg.animate(
+            [
+              { transform: `translateX(${-dir * DRAG_EXIT}px)`, opacity: 0 },
+              { transform: 'translateX(0)', opacity: 1 },
+            ],
+            { duration: 220, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+          );
+        });
+      };
+
+      lightboxStage?.addEventListener('pointerdown', (e) => {
+        if (!dialog?.open || !lightboxImg || e.button > 0) return;
+        dragStartX = e.clientX;
+        dragPointerId = e.pointerId;
+        dragOffset = 0;
+        didDrag = false;
+        lightboxImg.getAnimations().forEach((a) => a.cancel());
+        lightboxStage.setPointerCapture(e.pointerId);
+      });
+
+      lightboxStage?.addEventListener('pointermove', (e) => {
+        if (dragStartX === null || e.pointerId !== dragPointerId) return;
+        dragOffset = e.clientX - dragStartX;
+        if (Math.abs(dragOffset) > 4) didDrag = true;
+        lightboxImg.style.transform = `translateX(${dragOffset}px)`;
+        lightboxImg.style.opacity = String(Math.max(0.4, 1 - Math.abs(dragOffset) / 400));
+      });
+
+      const endDrag = (e) => {
+        if (dragStartX === null || e.pointerId !== dragPointerId) return;
+        dragStartX = null;
+        dragPointerId = null;
+        if (lightboxStage.hasPointerCapture(e.pointerId)) {
+          lightboxStage.releasePointerCapture(e.pointerId);
+        }
+        if (Math.abs(dragOffset) >= DRAG_COMMIT) {
+          finishDrag(dragOffset < 0);
+        } else {
+          lightboxImg.style.transition = 'transform 200ms cubic-bezier(0.22, 1, 0.36, 1)';
+          lightboxImg.style.transform = '';
+          lightboxImg.style.opacity = '';
+        }
+      };
+
+      lightboxStage?.addEventListener('pointerup', endDrag);
+      lightboxStage?.addEventListener('pointercancel', endDrag);
 
       const closeLightbox = () => {
         dialog?.close();
@@ -182,8 +253,13 @@ function resolveImgSrc(src) {
       lightboxClose?.addEventListener('click', closeLightbox);
 
       // Tap anywhere on the backdrop (but not the image, caption or a button)
-      // to dismiss.
+      // to dismiss. A swipe that ends over the backdrop also fires a click, so
+      // `didDrag` keeps that from closing the lightbox.
       dialog?.addEventListener('click', (e) => {
+        if (didDrag) {
+          didDrag = false;
+          return;
+        }
         const target = e.target;
         const isInteractive =
           target instanceof Element &&

@@ -158,6 +158,13 @@ body {
   }
 }
 
+/* Without this the browser treats a horizontal swipe inside the dialog as a
+   page scroll, so on iOS the page behind scrolls and the image never moves. */
+.lightbox-stage {
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 /* Lightbox slide-in: gives swiping / arrow taps a visible direction. */
 .lightbox-img--from-left {
   animation: lightbox-in-left 280ms cubic-bezier(0.22, 1, 0.36, 1);
