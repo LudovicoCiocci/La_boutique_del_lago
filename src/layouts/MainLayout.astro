@@ -120,24 +120,22 @@ const storeSchema = {
 			))
 		}
 		<script>
-			// iOS Safari restores the URL fragment on load, so once an in-page anchor
-			// has written "#mappa" into the address bar, every reload drops the visitor
-			// at the map instead of the hero. Take over restoration: honour the fragment
-			// only for a genuine deep link, i.e. one this page did not tag itself.
-			if ('scrollRestoration' in history) {
-				history.scrollRestoration = 'manual';
-			}
-
-			const hashFromSmoothScroll = Boolean(history.state?.smoothAnchor);
-
-			if (hashFromSmoothScroll) {
+			// Browsers restore the URL fragment on load and when returning to the page,
+			// so any in-page anchor that ends up in the address bar turns into "the site
+			// opens on the map". initSmoothAnchors deliberately never writes the fragment
+			// (see below); this clears any left over by an older session.
+			if (location.hash) {
 				history.replaceState(null, '', location.pathname + location.search);
-			}
 
-			if (hashFromSmoothScroll || !location.hash) {
-				window.scrollTo(0, 0);
-				// Also covers the bfcache restore, which bypasses scrollRestoration.
-				window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+				// Clearing the hash above is not enough: the browser performs the jump to
+				// the fragment while parsing, i.e. after this script has run, so the page
+				// still lands on the section. Force the hero back once loading is done.
+				const backToTop = () => window.scrollTo(0, 0);
+
+				backToTop();
+				window.addEventListener('DOMContentLoaded', backToTop);
+				window.addEventListener('load', backToTop);
+				window.addEventListener('pageshow', backToTop);
 			}
 		</script>
 		<script>
@@ -201,11 +199,10 @@ const storeSchema = {
 					event.preventDefault();
 					target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-// Keep the URL and keyboard focus in sync with the manual scroll. The
-				// `smoothAnchor` marker is what lets the script above tell this apart
-				// from a real deep link when the page is reloaded.
-				history.replaceState({ smoothAnchor: true }, '', hash);
-					target.setAttribute('tabindex', '-1');
+// The fragment is deliberately NOT written back to the URL: browsers restore
+				// it on load, which would reopen the page scrolled to this section
+				// instead of on the hero. Focus is still moved for keyboard users.
+				target.setAttribute('tabindex', '-1');
 					(target as HTMLElement).focus({ preventScroll: true });
 				});
 			}

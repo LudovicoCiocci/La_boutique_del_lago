@@ -159,7 +159,6 @@ function resolveImgSrc(src) {
       // drag. `touch-action: none` on the stage (see global.css) is what stops
       // iOS from stealing the gesture for the page scroll behind the dialog.
       const DRAG_COMMIT = 60;
-      const DRAG_EXIT = 120;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       let dragStartX = null;
@@ -167,45 +166,34 @@ function resolveImgSrc(src) {
       let dragOffset = 0;
       let didDrag = false;
 
-      const resetDragStyles = () => {
+      // Clears both the inline drag styles and any running animation. An
+      // animation left behind would keep overriding opacity and could pin the
+      // image at 0, so this runs before every source swap.
+      const clearDragStyles = () => {
+        lightboxImg.getAnimations().forEach((animation) => animation.cancel());
         lightboxImg.style.transition = '';
         lightboxImg.style.transform = '';
         lightboxImg.style.opacity = '';
       };
 
       const finishDrag = (forward) => {
-        const dir = forward ? 1 : -1;
+        clearDragStyles();
+        lightboxDirection = 0;
+        if (forward) emblaApi.scrollNext();
+        else emblaApi.scrollPrev();
+        if (reduceMotion) return;
 
-        if (reduceMotion) {
-          resetDragStyles();
-          lightboxDirection = 0;
-          if (forward) emblaApi.scrollNext();
-          else emblaApi.scrollPrev();
-          return;
-        }
-
-        // Slide the outgoing image off first, swap the source once it is out of
-        // the way, then bring the new one in from the opposite side.
+        // The source has already swapped, so this continues from where the drag
+        // left off back to centre. `fill: backwards` only holds the first
+        // keyframe while it waits, never after it ends, so the image cannot be
+        // left stranded at a low opacity.
         lightboxImg.animate(
           [
-            { transform: `translateX(${dragOffset}px)`, opacity: 1 },
-            { transform: `translateX(${dir * DRAG_EXIT}px)`, opacity: 0 },
+            { transform: `translateX(${dragOffset}px)`, opacity: 0.35 },
+            { transform: 'translateX(0)', opacity: 1 },
           ],
-          { duration: 160, easing: 'ease-in', fill: 'forwards' },
-        ).finished.then(() => {
-          if (!dialog?.open) return;
-          resetDragStyles();
-          lightboxDirection = 0;
-          if (forward) emblaApi.scrollNext();
-          else emblaApi.scrollPrev();
-          lightboxImg.animate(
-            [
-              { transform: `translateX(${-dir * DRAG_EXIT}px)`, opacity: 0 },
-              { transform: 'translateX(0)', opacity: 1 },
-            ],
-            { duration: 220, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
-          );
-        });
+          { duration: 240, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' },
+        );
       };
 
       lightboxStage?.addEventListener('pointerdown', (e) => {
@@ -232,6 +220,14 @@ function resolveImgSrc(src) {
         dragPointerId = null;
         if (lightboxStage.hasPointerCapture(e.pointerId)) {
           lightboxStage.releasePointerCapture(e.pointerId);
+        }
+        // A cancelled pointer (system gesture, incoming call) must leave no
+        // inline transform behind, or the image stays stuck off-centre.
+        if (e.type === 'pointercancel') {
+          lightboxImg.style.transition = 'transform 200ms cubic-bezier(0.22, 1, 0.36, 1)';
+          lightboxImg.style.transform = '';
+          lightboxImg.style.opacity = '';
+          return;
         }
         if (Math.abs(dragOffset) >= DRAG_COMMIT) {
           finishDrag(dragOffset < 0);

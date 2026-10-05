@@ -140,22 +140,15 @@ body {
    Sizing is in viewport units, not percentages: a percentage max-width against
    a shrink-to-fit parent is circular and resolves to the intrinsic image size.
    The 10.5rem subtracted from the height is stage padding + close-button band
-   + nav row + caption. */
+   + nav row + caption.
+
+   No aspect-ratio is forced here, on any breakpoint: the carousel uses a 3/4
+   crop on mobile, but applying it to the lightbox cut merchandise like the
+   shirts off at the edges. Combined with object-contain, the photo always fits
+   whole and simply spans the screen width. */
 .lightbox-img {
   max-width: calc(100vw - 1.5rem);
   max-height: calc(100dvh - 10.5rem);
-}
-
-/* Mobile only: reuse the carousel's 3/4 portrait frame (see the .embla
-   breakpoint above) so a landscape photo does not open as a short letterboxed
-   strip. Desktop keeps the image's own aspect ratio, contained. */
-@media (width < 840px) {
-  .lightbox-img {
-    width: calc(100vw - 1.5rem);
-    height: auto;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-  }
 }
 
 /* Without this the browser treats a horizontal swipe inside the dialog as a
