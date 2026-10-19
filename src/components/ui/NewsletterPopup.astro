@@ -1,0 +1,178 @@
+---
+// src/components/NewsletterPopup.astro
+//
+// Get these values from Mailchimp:
+// Audience > Signup forms > Embedded forms > copy the <form action="..."> URL
+// Example: https://yourname.us21.list-manage.com/subscribe/post?u=XXXX&id=YYYY&f_id=ZZZZ
+interface Props {
+  actionUrl: string; // the full Mailchimp form action URL
+  honeypotName: string; // the hidden "b_XXXX_YYYY" field name from the embed code
+  privacyUrl?: string;
+  delayMs?: number; // delay before the popup shows
+  snoozeDays?: number; // how long to stay hidden after close/subscribe
+  title?: string;
+  text?: string;
+}
+
+const {
+  actionUrl,
+  honeypotName,
+  privacyUrl = "/privacy",
+  delayMs = 8000,
+  snoozeDays = 14,
+  title = "Stay in the loop",
+  text = "Subscribe to our newsletter for news, offers and updates. No spam, unsubscribe anytime.",
+} = Astro.props;
+---
+
+<dialog
+  id="nl-popup"
+  aria-labelledby="nl-title"
+  class="m-auto w-[min(92vw,28rem)] rounded-2xl border-0 bg-white p-0 text-neutral-900 shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+  data-delay={delayMs}
+  data-snooze={snoozeDays}
+>
+  <div class="relative p-6 sm:p-8">
+    <button
+      type="button"
+      id="nl-close"
+      aria-label="Close"
+      class="absolute right-3 top-3 grid size-9 place-items-center rounded-full text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+    >
+      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"></path>
+      </svg>
+    </button>
+
+    <h2 id="nl-title" class="pr-8 text-2xl font-semibold tracking-tight">{title}</h2>
+    <p class="mt-2 text-sm leading-relaxed text-neutral-600">{text}</p>
+
+    <form id="nl-form" action={actionUrl} method="post" class="mt-6 space-y-4" novalidate>
+      <div>
+        <label for="nl-email" class="mb-1 block text-sm font-medium">Email</label>
+        <input
+          id="nl-email"
+          name="EMAIL"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com"
+          class="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/20"
+        />
+      </div>
+
+      <label class="flex items-start gap-2 text-xs text-neutral-600">
+        <input id="nl-consent" type="checkbox" required class="mt-0.5 size-4 shrink-0 accent-neutral-900" />
+        <span>
+          I agree to receive emails and accept the
+          <a href={privacyUrl} class="underline underline-offset-2 hover:text-neutral-900" target="_blank" rel="noopener">Privacy Policy</a>.
+        </span>
+      </label>
+
+      <!-- Mailchimp bot honeypot: must stay empty, hidden from humans -->
+      <div aria-hidden="true" style="position:absolute;left:-5000px;">
+        <input type="text" name={honeypotName} tabindex="-1" value="" autocomplete="off" />
+      </div>
+
+      <button
+        type="submit"
+        id="nl-submit"
+        class="w-full rounded-lg bg-heading px-4 py-3 text-sm font-semibold text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+      >
+        Subscribe
+      </button>
+
+      <p id="nl-msg" role="status" aria-live="polite" class="min-h-5 text-sm"></p>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  const KEY = "nl-popup-hidden-until";
+  const dialog = document.getElementById("nl-popup") as HTMLDialogElement | null;
+
+  if (dialog) {
+    const form = document.getElementById("nl-form") as HTMLFormElement;
+    const email = document.getElementById("nl-email") as HTMLInputElement;
+    const consent = document.getElementById("nl-consent") as HTMLInputElement;
+    const submit = document.getElementById("nl-submit") as HTMLButtonElement;
+    const msg = document.getElementById("nl-msg") as HTMLElement;
+    const closeBtn = document.getElementById("nl-close") as HTMLButtonElement;
+
+    const delay = Number(dialog.dataset.delay) || 8000;
+    const snoozeDays = Number(dialog.dataset.snooze) || 14;
+
+    const isSnoozed = () => {
+      try {
+        return Date.now() < Number(localStorage.getItem(KEY) || 0);
+      } catch {
+        return false;
+      }
+    };
+    const snooze = () => {
+      try {
+        localStorage.setItem(KEY, String(Date.now() + snoozeDays * 864e5));
+      } catch {}
+    };
+
+    const close = () => {
+      snooze();
+      dialog.close();
+    };
+
+    closeBtn.addEventListener("click", close);
+    dialog.addEventListener("cancel", snooze); // ESC key
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) close(); // click on backdrop
+    });
+
+    //uncomment code below after testing a remove the standalone dialog
+
+    // Open once after the delay, only if not snoozed
+    // if (!isSnoozed()) {
+    //   setTimeout(() => {
+    //     if (!dialog.open && !isSnoozed()) dialog.showModal();
+    //   }, delay);
+    // }
+    dialog.showModal();
+
+    const setMsg = (text: string, ok: boolean) => {
+      msg.textContent = text;
+      msg.className = "min-h-5 text-sm " + (ok ? "text-green-700" : "text-red-600");
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!email.validity.valid) {
+        setMsg("Please enter a valid email address.", false);
+        email.focus();
+        return;
+      }
+      if (!consent.checked) {
+        setMsg("Please accept the privacy policy to continue.", false);
+        return;
+      }
+
+      submit.disabled = true;
+      setMsg("Subscribing...", true);
+
+      try {
+        // Mailchimp doesn't send CORS headers, so use no-cors (opaque response).
+        // A resolved request means it was sent; Mailchimp then emails the confirmation.
+        await fetch(form.action, {
+          method: "POST",
+          mode: "no-cors",
+          body: new FormData(form),
+        });
+        setMsg("Almost done! Check your inbox to confirm your subscription.", true);
+        snooze();
+        form.reset();
+        setTimeout(() => dialog.open && dialog.close(), 3500);
+      } catch {
+        setMsg("Something went wrong. Please try again.", false);
+        submit.disabled = false;
+      }
+    });
+  }
+</script>

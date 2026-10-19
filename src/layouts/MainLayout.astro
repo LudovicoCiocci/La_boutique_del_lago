@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css"
 import CookieBanner from "../components/ui/CookieBanner.astro";
+import NewsletterPopup from "../components/ui/NewsletterPopup.astro";
+import { NEWSLETTER } from "../config/newsletter";
 
 // Must match `site` in astro.config.mjs
 const SITE_URL = 'https://www.laboutiquedellago.com';
@@ -210,6 +212,15 @@ const storeSchema = {
 			initSmoothAnchors();
 		</script>
 	</head>
+<NewsletterPopup
+  actionUrl={NEWSLETTER.actionUrl}
+  honeypotName={NEWSLETTER.honeypotName}
+  privacyUrl={NEWSLETTER.privacyUrl}
+  delayMs={8000}
+  snoozeDays={14}
+  title="Join the newsletter"
+  text="News, offers and updates. No spam."
+/>
 	<body>
 		        <slot />
     <CookieBanner />
