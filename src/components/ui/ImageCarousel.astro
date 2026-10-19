@@ -203,13 +203,20 @@ function resolveImgSrc(src) {
         dragOffset = 0;
         didDrag = false;
         lightboxImg.getAnimations().forEach((a) => a.cancel());
-        lightboxStage.setPointerCapture(e.pointerId);
       });
 
       lightboxStage?.addEventListener('pointermove', (e) => {
         if (dragStartX === null || e.pointerId !== dragPointerId) return;
         dragOffset = e.clientX - dragStartX;
-        if (Math.abs(dragOffset) > 4) didDrag = true;
+        if (!didDrag && Math.abs(dragOffset) > 4) {
+          didDrag = true;
+          // Capture only once a real drag starts. Capturing on pointerdown
+          // retargets the click that follows a tap to the stage, so taps on
+          // the arrows (and the close button) would never reach their own
+          // handlers and would be read as backdrop clicks instead — closing
+          // the lightbox instead of cycling the image.
+          lightboxStage.setPointerCapture(e.pointerId);
+        }
         lightboxImg.style.transform = `translateX(${dragOffset}px)`;
         lightboxImg.style.opacity = String(Math.max(0.4, 1 - Math.abs(dragOffset) / 400));
       });
