@@ -218,8 +218,8 @@ const storeSchema = {
   privacyUrl={NEWSLETTER.privacyUrl}
   delayMs={8000}
   snoozeDays={14}
-  title="Join the newsletter"
-  text="News, offers and updates. No spam."
+  title={`Iscriviti e ricevi il ${NEWSLETTER.discountPercent}% di sconto`}
+  text={`Ricevi subito un codice sconto del ${NEWSLETTER.discountPercent}% sul tuo primo acquisto, più novità, offerte e aggiornamenti dalla boutique. Niente spam, puoi disiscriverti quando vuoi.`}
 />
 	<body>
 		        <slot />

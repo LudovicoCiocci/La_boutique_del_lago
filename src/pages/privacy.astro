@@ -35,14 +35,20 @@ import MainLayout from "../layouts/MainLayout.astro";
 
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Dati raccolti</h2>
         <p>
-          Questo sito non prevede registrazione utenti né formulari di raccolta dati. I dati
-          personali possono essere trattati unicamente attraverso:
+          Questo sito non prevede la creazione di account utente. I dati personali possono
+          essere trattati unicamente attraverso:
         </p>
         <ul class="list-disc pl-6 space-y-2">
           <li>
             <strong>Dati di navigazione</strong> raccolti dal server web (indirizzo IP, tipo di
             browser, pagine visitate, data e ora), utilizzati esclusivamente per la sicurezza e
             la corretta erogazione del sito.
+          </li>
+          <li>
+            <strong>Iscrizione alla newsletter</strong>: l'indirizzo email inserito
+            volontariamente nei moduli presenti sul sito (popup e sezione dedicata prima del
+            piè di pagina). Il conferimento è facoltativo: senza l'email non è possibile
+            ricevere la newsletter.
           </li>
           <li>
             <strong>Cookie tecnici</strong> necessari al funzionamento del sito. Non richiedono
@@ -55,33 +61,81 @@ import MainLayout from "../layouts/MainLayout.astro";
           </li>
         </ul>
 
+        <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Newsletter</h2>
+        <p>
+          L'iscrizione alla newsletter è facoltativa e avviene tramite i moduli presenti sul
+          sito. I dati trattati sono l'<strong>indirizzo email</strong> fornito dall'utente, la
+          data e l'ora del consenso e, per finalità di sicurezza, l'indirizzo IP da cui è
+          avvenuta l'iscrizione. Questi dati sono utilizzati esclusivamente per inviarti
+          comunicazioni informative e promozionali su prodotti, novità e iniziative de La
+          Boutique Del Lago. L'iscrizione diventa effettiva solo dopo la conferma tramite il
+          link contenuto nell'email inviata all'indirizzo indicato; senza tale conferma non
+          vengono inviate comunicazioni.
+        </p>
+        <p>
+          La base giuridica è il consenso dell'interessato (art. 6, c. 1, lett. a GDPR), che
+          può essere revocato in qualsiasi momento tramite il link di disiscrizione presente in
+          fondo a ogni email oppure scrivendo a
+          <a class="underline" href="mailto:laboutiquedellagolc@gmail.com">laboutiquedellagolc@gmail.com</a>.
+          La revoca non pregiudica la liceità dei trattamenti effettuati prima della stessa.
+        </p>
+        <p>
+          L'indirizzo email è conservato fino alla revoca del consenso. Dopo la disiscrizione
+          viene rimosso dalla lista attiva; il fornitore del servizio può conservare un
+          registro minimo per evitare l'invio di ulteriori comunicazioni. Per misurare
+          l'efficacia delle campagne, il fornitore può raccogliere statistiche aggregate su
+          aperture e clic.
+        </p>
+
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Cookie</h2>
         <p>
           Puoi gestire le preferenze sui cookie in qualsiasi momento tramite il link
           <em>Cookie Preferences</em> presente nel piè di pagina del sito. Il consenso espresso
           può essere revocato in ogni momento.
         </p>
+        <p>
+          Oltre ai cookie, il sito utilizza la memoria locale del browser (localStorage) per
+          ricordare le preferenze espresse sul banner cookie e l'eventuale chiusura del popup
+          newsletter. Si tratta di dati tecnici memorizzati sul dispositivo dell'utente e non
+          trasmessi ai nostri server.
+        </p>
 
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Finalità e base giuridica</h2>
         <p>
           I dati sono trattati per garantire la sicurezza e il corretto funzionamento del sito
-          (art. 6, c. 1, lett. f GDPR) e, limitatamente ai cookie analitici, sulla base del
-          consenso espresso (art. 6, c. 1, lett. a GDPR). Non viene effettuato alcun
-          trattamento basato su decisioni automatizzate o profilazione.
+          (art. 6, c. 1, lett. f GDPR), per l'invio della newsletter sulla base del consenso
+          (art. 6, c. 1, lett. a GDPR) e, limitatamente ai cookie analitici, sulla base del
+          consenso espresso (art. 6, c. 1, lett. a GDPR). Non vengono adottate decisioni
+          automatizzate che producano effetti giuridici sull'interessato.
         </p>
 
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Fornitura a terzi</h2>
         <p>
-          I dati non vengono venduti o ceduti a terzi. La mappa di Google incorporata nella pagina
-          <em>Vieni a Trovarci</em> è fornita da Google LLC: consultando la mappa, l'utente
-          entra in relazione con Google, che tratta i dati secondo la propria informativa
-          (<a class="underline" href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">privacy policy Google</a>).
+          I dati non vengono venduti o ceduti a terzi. Per l'erogazione dei servizi presenti sul
+          sito ci avvaliamo dei seguenti fornitori, che trattano i dati secondo le proprie
+          informative:
         </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Google LLC</strong>: la mappa di Google incorporata nella pagina
+            <em>Vieni a Trovarci</em> è fornita da Google LLC. Consultando la mappa, l'utente
+            entra in relazione con Google, che tratta i dati secondo la propria informativa
+            (<a class="underline" href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank"> privacy policy Google</a>).
+          </li>
+          <li>
+            <strong>Mailchimp (Intuit Inc.)</strong>: l'invio della newsletter e la gestione
+            degli iscritti sono affidati a Mailchimp, che tratta i dati in qualità di
+            responsabile del trattamento secondo la propria informativa
+            (<a class="underline" href="https://mailchimp.com/legal/privacy/" rel="noopener noreferrer" target="_blank"> privacy policy Mailchimp</a>)
+            e fornisce adeguate garanzie per il trasferimento dei dati verso Paesi terzi.
+          </li>
+        </ul>
 
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">Conservazione</h2>
         <p>
           I dati di navigazione non sono conservati per periodi superiori a quelli necessari
-          alle finalità indicate.
+          alle finalità indicate. I dati di iscrizione alla newsletter sono conservati fino
+          alla revoca del consenso, come descritto nella sezione <em>Newsletter</em>.
         </p>
 
         <h2 class="font-heading text-2xl mt-10 mb-4 text-heading">I tuoi diritti</h2>
@@ -107,7 +161,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       </div>
 
       <p class="mt-12 text-sm opacity-70">
-        Ultimo aggiornamento: <time datetime="2026-10-01">1 ottobre 2026</time>
+        Ultimo aggiornamento: <time datetime="2026-10-27">27 ottobre 2026</time>
       </p>
     </div>
   </main>

@@ -3,8 +3,7 @@
 //
 // Inline newsletter signup, shown between the map and the footer.
 // Uses the same Mailchimp audience as the newsletter popup
-// (configuration lives in src/config/newsletter.ts) and the same
-// no-cors POST + confirmation-email flow.
+// (configuration lives in src/config/newsletter.ts).
 import { NEWSLETTER } from "../config/newsletter";
 
 interface Props {
@@ -20,12 +19,12 @@ const {
 const { actionUrl, honeypotName, privacyUrl } = NEWSLETTER;
 ---
 
-<section id="newsletter" class="bg-beije border-t border-teal-600/40 px-4 py-10">
+<section id="newsletter" class="bg-white border-t border-teal-600/40 px-4 py-10">
   <div class="mx-auto max-w-3xl text-center">
     <h2 class="text-3xl text-heading font-heading">{title}</h2>
     <p class="mt-2 text-lg italic text-text-color font-body">{text}</p>
 
-    <form id="ns-form" action={actionUrl} method="post" class="mx-auto mt-6 max-w-xl text-left" novalidate>
+    <form id="ns-form" action={actionUrl} method="post" target="_blank" class="mx-auto mt-6 max-w-xl text-left" novalidate>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div class="flex-1">
           <label for="ns-email" class="sr-only">Email</label>
@@ -65,52 +64,17 @@ const { actionUrl, honeypotName, privacyUrl } = NEWSLETTER;
     </form>
   </div>
 </section>
-
 <script>
-  const form = document.getElementById("ns-form") as HTMLFormElement | null;
+  import { bindNewsletterSignup } from "../scripts/newsletterSignup";
 
-  if (form) {
-    const email = document.getElementById("ns-email") as HTMLInputElement;
-    const consent = document.getElementById("ns-consent") as HTMLInputElement;
-    const submit = document.getElementById("ns-submit") as HTMLButtonElement;
-    const msg = document.getElementById("ns-msg") as HTMLElement;
-
-    const setMsg = (text: string, ok: boolean) => {
-      msg.textContent = text;
-      msg.className = "mt-3 min-h-5 text-sm " + (ok ? "text-green-700" : "text-red-600");
-    };
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (!email.validity.valid) {
-        setMsg("Inserisci un indirizzo email valido.", false);
-        email.focus();
-        return;
-      }
-      if (!consent.checked) {
-        setMsg("Accetta la Privacy Policy per continuare.", false);
-        return;
-      }
-
-      submit.disabled = true;
-      setMsg("Iscrizione in corso...", true);
-
-      try {
-        // Mailchimp doesn't send CORS headers, so use no-cors (opaque response).
-        // A resolved request means it was sent; Mailchimp then emails the confirmation.
-        await fetch(form.action, {
-          method: "POST",
-          mode: "no-cors",
-          body: new FormData(form),
-        });
-        setMsg("Ci siamo quasi! Controlla la tua casella di posta per confermare l'iscrizione.", true);
-        form.reset();
-      } catch {
-        setMsg("Qualcosa è andato storto. Riprova.", false);
-      } finally {
-        submit.disabled = false;
-      }
-    });
-  }
+  bindNewsletterSignup({
+    form: document.getElementById("ns-form") as HTMLFormElement | null,
+    email: document.getElementById("ns-email") as HTMLInputElement | null,
+    consent: document.getElementById("ns-consent") as HTMLInputElement | null,
+    submit: document.getElementById("ns-submit") as HTMLButtonElement | null,
+    message: document.getElementById("ns-msg") as HTMLElement | null,
+    messageBaseClass: "mt-3 min-h-5 text-sm",
+    successText:
+      "Ci siamo quasi! Controlla la tua casella di posta (anche lo spam) per confermare l'iscrizione.",
+  });
 </script>
